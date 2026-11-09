@@ -75,6 +75,19 @@ verifie('γ − 1 à 1 % de c, stable vs série', gm1 / (0.01 ** 2 / 2 + 3 * 0.0
 const tn = P.graviteTrouNoir(0.001);
 verifie('Trou noir à 1,001 rs : facteur', tn.facteur, Math.sqrt(0.001 / 1.001), 1e-15, tn.facteur.toFixed(5));
 
+console.log('— Horloges « grossies » : l\'ordre réel des astres est conservé');
+const astres = [
+  ['Terre', P.gravite(P.compacite(K.masseTerre, K.rayonTerre)).deficit],
+  ['Soleil', soleil.deficit],
+  ['Naine blanche', P.gravite(P.compacite(K.masseNaineBlanche, K.rayonNaineBlanche)).deficit],
+  ['Trou noir à 10 rs', P.graviteTrouNoir(9).deficit],
+  ['Étoile à neutrons', ns.deficit],
+];
+const visibles = astres.map(([n, d]) => [n, d * F.grossissement(d), F.grossissement(d)]);
+visibles.forEach(([n, v, g]) => console.log(`      ${n.padEnd(20)} écart affiché ${(100 * v).toFixed(2).padStart(6)} %  (grossi ×${g})`));
+const ordre = visibles.every((x, i) => i === 0 || x[1] > visibles[i - 1][1]);
+verifie('Ordre Terre < Soleil < naine < TN 10 rs < NS', ordre ? 1 : 0, 1, 0, ordre ? 'respecté' : 'NON');
+
 console.log('— Affichage (tel que dans la page)');
 egal('γ(87 %)', F.sig(P.gamma(0.87, 0.13), 3), '2,03');
 egal('γ(99 %)', F.sig(P.gamma(0.99, 0.01), 3), '7,09');
