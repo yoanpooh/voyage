@@ -1,6 +1,13 @@
 // Offline support: network first; the last copy when there is no network or it takes more than 4 s.
-const CACHE = 'voyage-v2';
+const CACHE = 'voyage-v3';
 const PAGE = './';
+// Only the trip page itself is handled: other pages of the site (relativite/…) are left to the browser,
+// so opening them can never replace the offline copy of the trip.
+const isTripPage = (url) => {
+  const home = new URL(PAGE, self.registration.scope).pathname;
+  const path = new URL(url).pathname;
+  return path === home || path === home + 'index.html';
+};
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -16,6 +23,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  if (req.mode === 'navigate' && !isTripPage(req.url)) return;
   // Every link (#prenom.cle, ?p=…&k=…) is the same page: one copy, always the latest.
   const key = req.mode === 'navigate' ? PAGE : req;
   // Pages are revalidated with the server each time, so an update shows up at once.
