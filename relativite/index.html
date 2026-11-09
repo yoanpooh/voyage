@@ -41,6 +41,7 @@ p{margin:0}
 .lib{font-size:14px;color:var(--muted)}
 output,.val{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .note{font-size:13px;color:var(--muted);margin-top:6px}
+.grand.long{font-size:20px}
 .grand{display:block;font-size:clamp(22px,7.4vw,28px);line-height:1.15;font-weight:750;font-variant-numeric:tabular-nums}
 .formule{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -72,7 +73,7 @@ input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(
 input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}
 input[type=range]::-moz-range-thumb{box-sizing:border-box;width:var(--thumb);height:var(--thumb);border-radius:50%;background:var(--card);border:3px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.3)}
 /* Repères sous le curseur du satellite */
-.reperes{position:relative;height:44px;margin-top:-12px}
+.reperes{position:relative;height:44px;margin-top:-9px}
 .repere{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:none;border:0;padding:0 6px 14px;cursor:pointer;white-space:nowrap}
 .repere::before{content:"";width:2px;height:9px;border-radius:1px;background:var(--muted);margin-bottom:3px}
 .repere.gauche{transform:none;align-items:flex-start}
@@ -122,7 +123,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;margin-top:24px}
         <button type="button" data-d="1">99&nbsp;%</button>
         <button type="button" data-d="0.01">99,99&nbsp;%</button>
       </div>
-      <p class="note">c&nbsp;= vitesse de la lumière, environ 300 000 km par seconde.</p>
+      <p class="note">c&nbsp;= vitesse de la lumière, environ 300&nbsp;000&nbsp;km par seconde.</p>
     </div>
     <div class="ctrl">
       <div class="ligne"><label class="lib" for="v-duree">Durée de l'aller-retour, vue de la Terre</label><output id="v-duree-txt" for="v-duree"></output></div>
@@ -381,14 +382,14 @@ const Format = (() => {
   function ecartAns(ans) { return duree(ans * CONSTANTES.an); }
   // Grand nombre en mots (pour le grossissement)
   function grandNombre(x) {
-    if (x >= 1e9) { const m = x / 1e9; return entier(m) + ' ' + pluriel(m, 'milliard'); }
-    if (x >= 1e6) { const m = x / 1e6; return entier(m) + ' ' + pluriel(m, 'million'); }
+    if (x >= 1e9) { const m = x / 1e9; return entier(m) + '\u00a0' + pluriel(m, 'milliard'); }
+    if (x >= 1e6) { const m = x / 1e6; return entier(m) + '\u00a0' + pluriel(m, 'million'); }
     return entier(x);
   }
   function distanceMetres(m) {
     if (m < 1) return 'moins d\'un mètre';
-    if (m < 999.5) return entier(m) + ' m';
-    return sig(m / 1000, 3) + ' km';
+    if (m < 999.5) return entier(m) + '\u00a0m';
+    return sig(m / 1000, 3) + '\u00a0km';
   }
   // Horloges de l'onglet Gravité : un écart réel invisible (< 1 %) est grossi pour devenir visible,
   // en gardant l'ordre réel des astres (Terre < Soleil < naine blanche < trou noir à 10 rs, 5,1 %).
@@ -505,8 +506,10 @@ function majVitesse() {
   if (V.gm1 > 0) dec = Math.max(dec, 1 - Math.floor(Math.log10(V.gm1)));
   const gTxt = F.sansZeros(F.fixe(V.gamma, Math.min(dec, 12)));
   $('v-gamma').textContent = gTxt;
-  $('v-un-an').textContent = V.gm1 < 0.01
-    ? (V.gm1 === 0 ? '1' + NBSP + 'an' : '1' + NBSP + 'an + ' + F.duree(V.gm1 * K.an))
+  const petit = V.gm1 > 0 && V.gm1 < 0.01;   // « 1 an + 10 h 59 min » : texte long, il peut passer à la ligne après « + »
+  $('v-un-an').classList.toggle('long', petit);
+  $('v-un-an').textContent = V.gm1 === 0 ? '1' + NBSP + 'an'
+    : petit ? '1' + NBSP + 'an' + NBSP + '+ ' + F.duree(V.gm1 * K.an)
     : gTxt + NBSP + (V.gamma >= 2 ? 'ans' : 'an');
   trajet.t = 0; trajet.actif = false;
   $('v-lancer').textContent = 'Lancer';
@@ -575,7 +578,7 @@ function dessinerVoyage() {
   // Point de demi-tour
   const al = V.beta * V.T / 2;
   if (al > 0) {
-    const txt = 'demi-tour à ' + F.sig(al, 3) + NBSP + (al >= 2 ? 'années-lumière' : 'année-lumière');
+    const txt = 'demi-tour à ' + F.sig(al, 3) + NBSP + (Number(al.toPrecision(3)) >= 2 ? 'années-lumière' : 'année-lumière');
     ctx.textAlign = 'right'; ctx.fillStyle = coul.muted;
     ctx.fillText(txt, Math.min(w - 4, Math.max(x0 + D + R + 2, ctx.measureText(txt).width + 4)), yM - R - 13);
   }
@@ -711,7 +714,7 @@ function majGravite() {
     const k = 1 + G.kMoins1;
     const dec = Math.max(0, 1 - Math.floor(Math.log10(G.kMoins1)));
     const kTxt = F.sansZeros(F.fixe(k, dec));
-    $('tn-txt').textContent = kTxt + NBSP + '× l\'horizon';
+    $('tn-txt').textContent = kTxt + NBSP + '×' + NBSP + 'l\'horizon';
     curTN.setAttribute('aria-valuetext', kTxt + ' fois le rayon de l\'horizon');
     $('tn-km').textContent = 'Soit à ' + F.sig(k * rsTN / 1e3, 3) + NBSP + 'km du centre, à ' + F.distanceMetres(G.kMoins1 * rsTN) + ' au-dessus de l\'horizon.';
   } else {
@@ -722,7 +725,7 @@ function majGravite() {
   G.grossi = F.grossissement(deficit);
   const el = $('grossi');
   el.hidden = G.grossi === 1;
-  el.textContent = 'Écart réel minuscule' + NBSP + ': ici grossi ' + F.grandNombre(G.grossi) + (G.grossi >= 1e6 ? ' de' : '') + ' fois pour être visible.';
+  el.textContent = 'Écart réel minuscule' + NBSP + ': ici grossi ' + F.grandNombre(G.grossi) + (G.grossi >= 1e6 ? NBSP + 'de' : '') + NBSP + 'fois pour être visible.';
   $('g-facteur').textContent = F.facteur(facteur, deficit);
   $('g-retard').textContent = F.duree(deficit * K.an);
   $('g-heure').textContent = F.uneHeure(facteur, deficit);
@@ -818,7 +821,7 @@ function altDepuisCurseur(s) { return Number((ALT_MIN * Math.pow(ALT_MAX / ALT_M
     const decalage = r.cote === 'gauche' ? ' - 7px' : r.cote === 'droite' ? ' + 7px' : '';
     b.style.left = `calc(var(--thumb) / 2${decalage} + ${f.toFixed(4)} * (100% - var(--thumb)))`;
     b.textContent = r.court;
-    b.setAttribute('aria-label', r.long + ', ' + F.entier(r.h / 1e3) + ' km');
+    b.setAttribute('aria-label', (r.long.includes(r.court) ? r.long : r.court + ' — ' + r.long) + ', ' + F.entier(r.h / 1e3) + ' km');
     b.addEventListener('click', () => reglerSatellite(r.h));
     r.el = b; box.appendChild(b);
   }
@@ -862,7 +865,7 @@ const ACCEL_ORBITE = 1500;
 function dessinerOrbite() {
   const { ctx, w, h } = canvas2d($('cv-orbite'));
   if (w < 60) return;
-  const cx = w / 2, cy = h / 2, ech = (h / 2 - 8) / (K.rayonTerre + ALT_MAX);
+  const cx = w / 2, cy = h / 2, ech = (h / 2 - 12) / (K.rayonTerre + ALT_MAX);
   // Altitude d'équilibre
   ctx.setLineDash([3, 4]); ctx.strokeStyle = coul.accent; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.7;
   cercle(ctx, cx, cy, (K.rayonTerre + P.altitudeEquilibre) * ech); ctx.stroke();
@@ -882,7 +885,7 @@ function dessinerOrbite() {
   };
   ctx.font = '12px system-ui,sans-serif';
   legende('À l\'échelle', 4, 14, 'left', coul.muted);
-  legende('Accéléré ×' + NBSP + F.entier(ACCEL_ORBITE), 4, h - 6, 'left', coul.muted);
+  legende('Accéléré ×' + NBSP + F.entier(ACCEL_ORBITE), 4, h - 4, 'left', coul.muted);
   legende('- - équilibre', w - 4, 14, 'right', coul.accent);
 }
 function animerOrbite(dt) {
