@@ -32,7 +32,7 @@ h1{font-size:22px;line-height:1.2;margin:0}
 h2{font-size:18px;margin:22px 0 6px}
 p{margin:0}
 [hidden]{display:none!important}
-.onglets{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 0;background:var(--bar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.onglets{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 0;background:var(--bar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .onglets button{font:inherit;font-size:15px;font-weight:600;padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
 .onglets button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .intro{color:var(--muted);margin:4px 0 12px}
@@ -453,7 +453,8 @@ function ouvrir(nom, focus, parUtilisateur) {
     $(b.getAttribute('aria-controls')).hidden = !oui;
     if (oui && focus) b.focus();
   }
-  if (location.hash !== '#' + nom) history.replaceState(null, '', '#' + nom);
+  // Dans un cadre protégé (ex. page claude.ai), changer l'adresse peut être refusé : sans gravité
+  try { if (location.hash !== '#' + nom) history.replaceState(null, '', '#' + nom); } catch (e) { /* ignoré */ }
   // Changement d'onglet en bas de page : on remonte au début du nouvel onglet (barre d'onglets en haut)
   if (parUtilisateur) { const y = document.querySelector('header').offsetHeight; if (scrollY > y) scrollTo(0, y); }
   dessinerTout();
