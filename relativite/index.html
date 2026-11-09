@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f6fa">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d1117">
+<meta name="description" content="Simulateur de relativité : vitesse, gravité et GPS.">
+<title>Le temps est élastique — simulateur de relativité</title>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f5f6fa;--card:#fff;--fg:#141824;--muted:#5b6274;--line:#dde1ea;--soft:#eef1f8;
+  --accent:#3256d6;--accent-fg:#fff;--photon:#d99500;--plus:#13804a;--minus:#cc3f22;
+  --earth:#2a77d0;--land:#3a9d68;--bar:rgba(245,246,250,.88);
+  --thumb:26px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0d1117;--card:#161b25;--fg:#e8ebf2;--muted:#9aa2b4;--line:#2a3141;--soft:#1c2331;
+    --accent:#86a0ff;--accent-fg:#0d1117;--photon:#ffc940;--plus:#4fd08c;--minus:#ff7d5e;
+    --earth:#4f9bff;--land:#4cc285;--bar:rgba(13,17,23,.88);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+.page{max-width:520px;margin:0 auto;padding:0 max(14px,env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+header{padding:calc(14px + env(safe-area-inset-top)) 0 4px}
+h1{font-size:22px;line-height:1.2;margin:0}
+h2{font-size:18px;margin:22px 0 6px}
+p{margin:0}
+[hidden]{display:none!important}
+.onglets{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 0;background:var(--bar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.onglets button{font:inherit;font-size:15px;font-weight:600;padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.onglets button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.intro{color:var(--muted);margin:4px 0 12px}
+.carte{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.lib{font-size:14px;color:var(--muted)}
+output,.val{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+.grand{display:block;font-size:28px;line-height:1.15;font-weight:750;font-variant-numeric:tabular-nums}
+.formule{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo>div{min-width:0}
+.accent{color:var(--accent)}
+.phrase{background:var(--soft);border-radius:14px;padding:12px 14px;margin:12px 0}
+.puces{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.puces button{font:inherit;font-size:14px;padding:7px 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;font-variant-numeric:tabular-nums}
+.puces button[aria-pressed="true"],.puces button[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.principal{display:block;width:100%;font:inherit;font-size:17px;font-weight:700;padding:13px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-fg);cursor:pointer;margin-top:12px}
+.principal:active{transform:scale(.99)}
+canvas{display:block;width:100%}
+.ctrl+.ctrl{margin-top:14px}
+.vue{font-size:14px;font-weight:600;margin:2px 0 4px}
+.vue+canvas{border-radius:10px;background:var(--soft)}
+.tics{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin:6px 0 14px;font-variant-numeric:tabular-nums}
+.tics b{color:var(--fg)}
+.tics:last-child{margin-bottom:0}
+.pastille{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.grossi{color:var(--photon);font-weight:600;text-align:center}
+.stats>div+div{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}
+/* Curseurs */
+input[type=range]{-webkit-appearance:none;appearance:none;display:block;width:100%;height:34px;margin:2px 0;background:transparent;cursor:pointer}
+input[type=range]:focus{outline:none}
+input[type=range]:focus-visible::-webkit-slider-thumb{outline:3px solid var(--accent);outline-offset:2px}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--accent) var(--pct,0%),var(--line) var(--pct,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;box-sizing:border-box;width:var(--thumb);height:var(--thumb);margin-top:calc(3px - var(--thumb)/2);border-radius:50%;background:var(--card);border:3px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{box-sizing:border-box;width:var(--thumb);height:var(--thumb);border-radius:50%;background:var(--card);border:3px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+/* Repères sous le curseur du satellite */
+.reperes{position:relative;height:36px;margin-top:-6px}
+.repere{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:none;border:0;padding:0 2px 4px;cursor:pointer;white-space:nowrap}
+.repere::before{content:"";width:2px;height:9px;border-radius:1px;background:var(--muted);margin-bottom:3px}
+.repere.gauche{transform:none;align-items:flex-start}
+.repere.droite{transform:translateX(-100%);align-items:flex-end}
+.repere.eq{color:var(--accent)}
+.repere.eq::before{background:var(--accent)}
+.repere[aria-pressed="true"]{color:var(--fg)}
+/* Barres de l'onglet « Les deux » */
+.barre{margin-top:12px}
+.barre:first-of-type{margin-top:4px}
+.barre .ligne{font-size:14px}
+.piste{position:relative;height:14px;margin-top:5px;border-radius:7px;background:var(--soft)}
+.piste::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--muted);opacity:.6}
+.rempli{position:absolute;top:0;bottom:0;border-radius:7px;transition:width .12s,left .12s}
+.plus{color:var(--plus)}.moins{color:var(--minus)}
+.fond-plus{background:var(--plus)}.fond-moins{background:var(--minus)}.fond-total{background:var(--accent)}
+.total-l{font-weight:700}
+footer{font-size:12px;color:var(--muted);text-align:center;margin-top:24px}
+@media (min-width:480px){h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <h1>Le temps est élastique</h1>
+</header>
+
+<nav class="onglets" role="tablist" aria-label="Simulations">
+  <button role="tab" id="tab-vitesse" aria-controls="vitesse" aria-selected="true">Vitesse</button>
+  <button role="tab" id="tab-gravite" aria-controls="gravite" aria-selected="false" tabindex="-1">Gravité</button>
+  <button role="tab" id="tab-deux" aria-controls="deux" aria-selected="false" tabindex="-1">Les deux</button>
+</nav>
+
+<noscript><p class="phrase">Ce simulateur a besoin de JavaScript.</p></noscript>
+
+<!-- ============ 1. VITESSE ============ -->
+<section id="vitesse" role="tabpanel" aria-labelledby="tab-vitesse">
+  <p class="intro">Plus on va vite, plus son propre temps ralentit : à 30 ans, deux jumeaux se quittent, l'un part en fusée puis revient, l'autre l'attend sur Terre.</p>
+
+  <div class="carte">
+    <div class="ctrl">
+      <div class="ligne"><label class="lib" for="v-vitesse">Vitesse de la fusée</label><output id="v-vitesse-txt" for="v-vitesse"></output></div>
+      <input type="range" id="v-vitesse" min="0" max="1000" step="1">
+      <div class="puces" id="v-puces" aria-label="Vitesses rapides">
+        <button type="button" data-d="50">50 %</button>
+        <button type="button" data-d="13">87 %</button>
+        <button type="button" data-d="1">99 %</button>
+        <button type="button" data-d="0.01">99,99 %</button>
+      </div>
+      <p class="note">c = vitesse de la lumière, environ 300 000 km par seconde.</p>
+    </div>
+    <div class="ctrl">
+      <div class="ligne"><label class="lib" for="v-duree">Durée du voyage vue de la Terre</label><output id="v-duree-txt" for="v-duree"></output></div>
+      <input type="range" id="v-duree" min="1" max="100" step="1" value="20">
+    </div>
+  </div>
+
+  <div class="carte">
+    <canvas id="cv-voyage" style="height:118px" aria-label="Animation : la fusée part de la Terre, fait demi-tour et revient"></canvas>
+    <div class="duo" style="margin-top:10px">
+      <div><span class="lib"><span class="pastille" style="background:var(--earth)"></span>Jumeau sur Terre</span><span class="grand" id="age-terre">30,0 ans</span></div>
+      <div><span class="lib"><span class="pastille" style="background:var(--accent)"></span>Jumeau voyageur</span><span class="grand accent" id="age-voyageur">30,0 ans</span></div>
+    </div>
+    <p class="note" id="v-ecart"></p>
+    <button type="button" class="principal" id="v-lancer">Lancer</button>
+  </div>
+
+  <div class="carte duo">
+    <div><span class="lib">Facteur γ</span><span class="grand" id="v-gamma"></span><span class="formule">γ = 1/√(1 − v²/c²)</span></div>
+    <div><span class="lib">1 an dans la fusée =</span><span class="grand" id="v-un-an"></span><span class="formule">sur Terre</span></div>
+  </div>
+
+  <p class="phrase">C'est le voyageur qui vieillit moins, parce que c'est lui qui fait demi-tour : il change de trajectoire, pas son jumeau resté sur Terre.</p>
+
+  <h2>L'horloge à lumière</h2>
+  <p class="intro">La lumière va à la même vitesse dans les deux vues, mais vu de l'extérieur son trajet en zigzag est plus long : chaque tic dure γ fois plus longtemps.</p>
+  <div class="carte">
+    <p class="vue">a) Vue de l'intérieur de la fusée</p>
+    <canvas id="cv-int" style="height:104px" aria-label="Un grain de lumière fait des allers-retours entre deux miroirs"></canvas>
+    <div class="tics"><span>Tics : <b id="tics-int">0</b></span><span id="duree-int"></span></div>
+    <p class="vue">b) La même horloge, vue depuis la Terre</p>
+    <canvas id="cv-ext" style="height:104px" aria-label="La même horloge avance : la lumière trace un zigzag"></canvas>
+    <div class="tics"><span>Tics : <b id="tics-ext">0</b></span><span id="duree-ext"></span></div>
+  </div>
+</section>
+
+<!-- ============ 2. GRAVITÉ ============ -->
+<section id="gravite" role="tabpanel" aria-labelledby="tab-gravite" hidden>
+  <p class="intro">Près d'un astre massif, le temps passe plus lentement. Plus l'astre est compact, plus l'effet est fort.</p>
+
+  <div class="carte">
+    <div class="puces" id="astres" role="radiogroup" aria-label="Astre">
+      <button type="button" role="radio" data-astre="terre">Terre</button>
+      <button type="button" role="radio" data-astre="soleil">Soleil</button>
+      <button type="button" role="radio" data-astre="naine">Naine blanche</button>
+      <button type="button" role="radio" data-astre="neutrons">Étoile à neutrons</button>
+      <button type="button" role="radio" data-astre="trou">Trou noir</button>
+    </div>
+    <p class="note" id="astre-info"></p>
+    <div id="bloc-tn" class="ctrl" style="margin-top:10px" hidden>
+      <div class="ligne"><label class="lib" for="tn-dist">Distance au centre</label><output id="tn-txt" for="tn-dist"></output></div>
+      <input type="range" id="tn-dist" min="0" max="1000" step="1">
+      <p class="note" id="tn-km"></p>
+    </div>
+  </div>
+
+  <div class="carte">
+    <canvas id="cv-grav" style="height:178px" aria-label="Deux horloges : ici et loin dans l'espace"></canvas>
+    <p class="note grossi" id="grossi" hidden></p>
+  </div>
+
+  <div class="carte stats">
+    <div><span class="lib">Rythme ici (horloge très loin = 1)</span><span class="grand" id="g-facteur"></span><span class="formule">√(1 − 2GM/(rc²))</span></div>
+    <div><span class="lib">Retard pris ici en 1 an</span><span class="grand" id="g-retard"></span></div>
+    <div><span class="lib">1 h ici =</span><span class="grand" id="g-heure"></span><span class="formule">loin dans l'espace</span></div>
+  </div>
+
+  <h2>Altitude sur Terre</h2>
+  <div class="carte">
+    <p class="intro" style="margin-top:0">En montagne, on est un peu plus loin du centre de la Terre : le temps y passe un poil plus vite.</p>
+    <div class="ligne"><label class="lib" for="alt">Altitude</label><output id="alt-txt" for="alt"></output></div>
+    <input type="range" id="alt" min="0" max="9000" step="10" value="1000">
+    <div class="stats" style="margin-top:6px">
+      <div class="ligne"><span class="lib">Avance par jour</span><span class="val" id="alt-jour"></span></div>
+      <div class="ligne"><span class="lib">Avance par an</span><span class="val" id="alt-an"></span></div>
+      <div class="ligne"><span class="lib">Sur 80 ans de vie</span><span class="val" id="alt-vie"></span></div>
+    </div>
+    <p class="formule" style="margin-top:8px">Par rapport au niveau de la mer : g·h/c².</p>
+  </div>
+</section>
+
+<!-- ============ 3. LES DEUX ============ -->
+<section id="deux" role="tabpanel" aria-labelledby="tab-deux" hidden>
+  <p class="intro">En orbite, deux effets s'opposent : la gravité, plus faible là-haut, fait avancer l'horloge du satellite ; sa vitesse la fait retarder.</p>
+
+  <div class="carte">
+    <canvas id="cv-orbite" style="height:200px" aria-label="La Terre et l'orbite du satellite, à l'échelle"></canvas>
+    <div class="ligne" style="margin-top:8px"><label class="lib" for="sat">Altitude du satellite</label><output id="sat-txt" for="sat"></output></div>
+    <input type="range" id="sat" min="0" max="1000" step="1">
+    <div class="reperes" id="reperes"></div>
+    <p class="note" id="sat-info"></p>
+  </div>
+
+  <div class="carte">
+    <p class="lib">Écart avec une horloge au sol, en µs (millionièmes de seconde) par jour</p>
+    <div class="barre">
+      <div class="ligne"><span>Gravité : avance</span><span class="val plus" id="b-grav"></span></div>
+      <div class="piste"><div class="rempli fond-plus" id="r-grav"></div></div>
+    </div>
+    <div class="barre">
+      <div class="ligne"><span>Vitesse : retard</span><span class="val moins" id="b-vit"></span></div>
+      <div class="piste"><div class="rempli fond-moins" id="r-vit"></div></div>
+    </div>
+    <div class="barre">
+      <div class="ligne total-l"><span>Total</span><span class="val" id="b-tot"></span></div>
+      <div class="piste"><div class="rempli fond-total" id="r-tot"></div></div>
+    </div>
+    <p class="formule" style="margin-top:10px">Rotation de la Terre ignorée.</p>
+  </div>
+
+  <p class="phrase" id="sat-phrase"></p>
+</section>
+
+<footer>Calculs : relativité restreinte et générale, champ faible pour la Terre et le GPS.</footer>
+</div>
+
+<!-- =====================================================================
+     CALCULS — script autonome (aucun accès à la page), testable à part.
+     ===================================================================== -->
+<script id="calculs">
+"use strict";
+/* Constantes physiques (unités SI) */
+const CONSTANTES = Object.freeze({
+  c: 299792458,                    // vitesse de la lumière (m/s) — exacte, définit le mètre
+  G: 6.67430e-11,                  // constante de gravitation (m³·kg⁻¹·s⁻²) — CODATA 2018
+  g: 9.80665,                      // pesanteur standard au niveau de la mer (m/s²)
+  masseSoleil: 1.98847e30,         // kg
+  rayonSoleil: 6.957e8,            // m — rayon solaire nominal (UAI 2015)
+  masseTerre: 5.9722e24,           // kg
+  rayonTerre: 6.371e6,             // m — rayon moyen
+  masseNaineBlanche: 0.6 * 1.98847e30,   // kg — 0,6 masse solaire
+  rayonNaineBlanche: 8.7e6,              // m — 8 700 km
+  masseEtoileNeutrons: 1.4 * 1.98847e30, // kg — 1,4 masse solaire
+  rayonEtoileNeutrons: 1.2e4,            // m — 12 km
+  masseTrouNoir: 10 * 1.98847e30,  // kg — seulement pour donner des distances en km (le facteur n'en dépend pas)
+  jour: 86400,                     // s
+  an: 365.25 * 86400,              // s — année julienne
+});
+
+const Physique = (() => {
+  const K = CONSTANTES;
+  const c2 = K.c * K.c;
+
+  /* ---- Vitesse ----
+     On garde e = 1 − β (ce qui manque pour atteindre c) comme donnée de départ :
+     1 − β² = (1 − β)(1 + β) = e·(1 + β), sans jamais calculer 1 − β² près de β = 1. */
+  function gamma(beta, e = 1 - beta) { return 1 / Math.sqrt(e * (1 + beta)); }
+  // γ − 1 sans soustraction (précis quand β est petit) : (γ − 1)(γ + 1) = β²γ²
+  function gammaMoins1(beta, e = 1 - beta) { const g = gamma(beta, e); return beta * beta * g * g / (g + 1); }
+  function jumeaux(beta, e, dureeTerre) {
+    const g = gamma(beta, e);
+    return { gamma: g, voyageur: dureeTerre / g, ecart: dureeTerre * gammaMoins1(beta, e) / g, distanceAl: beta * dureeTerre / 2 };
+  }
+
+  /* ---- Gravité ----
+     x = 2GM/(rc²) = rs/r ; rythme d'une horloge posée à r : f = √(1 − x).
+     Ce qu'elle perd : 1 − f = x / (1 + √(1 − x))  → aucune soustraction de nombres proches. */
+  function compacite(M, r) { return 2 * K.G * M / (r * c2); }
+  function rayonSchwarzschild(M) { return 2 * K.G * M / c2; }
+  function gravite(x) {
+    const f = Math.sqrt(1 - x);
+    return { x, facteur: f, deficit: x / (1 + f) };
+  }
+  // Trou noir : r = k·rs, on part de (k − 1) pour garder la précision près de l'horizon.
+  function graviteTrouNoir(kMoins1) {
+    const k = 1 + kMoins1, x = 1 / k, f = Math.sqrt(kMoins1 / k);
+    return { x, facteur: f, deficit: x / (1 + f) };
+  }
+
+  /* ---- Altitude sur Terre ---- avance relative ≈ g·h/c² (premier ordre, h ≪ rayon terrestre) */
+  function avanceAltitude(h) { return K.g * h / c2; }
+
+  /* ---- Satellite ---- (rotation de la Terre ignorée), écarts relatifs à une horloge au sol */
+  function satellite(h) {
+    const R = K.rayonTerre, r = R + h, GM = K.G * K.masseTerre;
+    const v = Math.sqrt(GM / r);
+    const grav = GM / c2 * h / (R * r);             // (GM/c²)(1/R − 1/r), écrit h/(R·r) : pas de soustraction
+    const vit = GM / (2 * r * c2);                   // v²/(2c²)
+    const total = GM / c2 * (h - R / 2) / (R * r);   // = grav − vit, mis en facteur : exact même quand les deux se compensent
+    const usJour = K.jour * 1e6;
+    return {
+      r, v, periode: 2 * Math.PI * r / v,
+      graviteUsJour: grav * usJour, vitesseUsJour: vit * usJour, totalUsJour: total * usJour,
+      erreurMetresJour: Math.abs(total) * K.jour * K.c,
+    };
+  }
+  // Les deux effets s'annulent quand 1/R − 1/r = 1/(2r), soit r = 3R/2 : altitude = R/2
+  const altitudeEquilibre = K.rayonTerre / 2;
+
+  return { gamma, gammaMoins1, jumeaux, compacite, rayonSchwarzschild, gravite, graviteTrouNoir, avanceAltitude, satellite, altitudeEquilibre };
+})();
+
+/* Mise en forme des nombres, à la française */
+const Format = (() => {
+  const nfs = new Map();
+  function nf(dec) {
+    let f = nfs.get(dec);
+    if (!f) { f = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }); nfs.set(dec, f); }
+    return f;
+  }
+  function sansZeros(s) { return s.includes(',') ? s.replace(/0+$/, '').replace(/,$/, '') : s; }
+  // `dec` décimales, vrai signe « − », jamais de « −0 »
+  function fixe(x, dec, signe = false) {
+    const r = Number(x.toFixed(dec)) || 0;
+    const s = nf(dec).format(Math.abs(r));
+    return (r < 0 ? '−' : signe && r > 0 ? '+' : '') + s;
+  }
+  function decimalesSig(x, n) { return x === 0 ? 0 : Math.max(0, n - 1 - Math.floor(Math.log10(Math.abs(x)))); }
+  // `n` chiffres significatifs, zéros inutiles retirés (sauf `zeros: true`)
+  function sig(x, n = 3, { signe = false, zeros = false } = {}) {
+    if (!isFinite(x)) return '—';
+    const r = Number(x.toPrecision(n));
+    const s = fixe(r, decimalesSig(r, n), signe);
+    return zeros ? s : sansZeros(s);
+  }
+  function entier(x) { return fixe(Math.round(x), 0); }
+  function pluriel(v, mot) { return Math.abs(v) >= 2 ? mot + 's' : mot; }
+  // Durée en secondes → unité adaptée (ns, µs, ms, s, min, h, jours, ans)
+  function duree(sec, n = 3) {
+    const a = Math.abs(sec), _ = '\u00a0';   // espaces insécables : « 11 h 58 min » ne se coupe pas
+    if (a === 0) return '0' + _ + 's';
+    if (a < 99.5) {
+      const unites = [[1e-9, 'ns'], [1e-6, 'µs'], [1e-3, 'ms'], [1, 's']];
+      let i = a < 1e-6 ? 0 : a < 1e-3 ? 1 : a < 1 ? 2 : 3;
+      let v = Number((a / unites[i][0]).toPrecision(n));
+      if (v >= 1000 && i < 3) { i++; v = Number((a / unites[i][0]).toPrecision(n)); }
+      return sig(v, n) + _ + unites[i][1];
+    }
+    if (a < 3599.5) {
+      let m = Math.floor(a / 60), s = Math.round(a - 60 * m);
+      if (s === 60) { m++; s = 0; }
+      return m + _ + 'min' + (s ? _ + s + _ + 's' : '');
+    }
+    if (a < 47.5 * 3600) {
+      let h = Math.floor(a / 3600), m = Math.round((a - 3600 * h) / 60);
+      if (m === 60) { h++; m = 0; }
+      return h + _ + 'h' + (m ? _ + m + _ + 'min' : '');
+    }
+    if (a < 364.5 * 86400) { const j = Number((a / 86400).toPrecision(n)); return sig(j, n) + _ + pluriel(j, 'jour'); }
+    const an = Number((a / CONSTANTES.an).toPrecision(n));
+    return sig(an, n) + _ + pluriel(an, 'an');
+  }
+  // Rythme d'horloge proche de 1 : assez de décimales pour voir l'écart, groupées par 3
+  function facteur(f, deficit) {
+    if (f < 0.1) return sig(f, 3);
+    const dec = Math.max(3, Math.ceil(-Math.log10(deficit)) + 1);
+    const [ent, frac] = fixe(f, dec).split(',');
+    return ent + ',' + frac.replace(/(\d{3})(?=\d)/g, '$1 ');
+  }
+  // « 1 h ici = … loin »
+  function uneHeure(f, deficit) {
+    const enPlus = 3600 * deficit / f;           // secondes gagnées par l'horloge lointaine
+    return enPlus < 36 ? '1\u00a0h + ' + duree(enPlus) : duree(3600 / f);
+  }
+  // Écart d'âge (en années) → texte court
+  function ecartAns(ans) { return duree(ans * CONSTANTES.an); }
+  // Grand nombre en mots (pour le grossissement)
+  function grandNombre(x) {
+    if (x >= 1e9) { const m = x / 1e9; return entier(m) + ' ' + pluriel(m, 'milliard'); }
+    if (x >= 1e6) { const m = x / 1e6; return entier(m) + ' ' + pluriel(m, 'million'); }
+    return entier(x);
+  }
+  function distanceMetres(m) {
+    if (m < 1) return 'moins d\'un mètre';
+    if (m < 999.5) return entier(m) + ' m';
+    return sig(m / 1000, 3) + ' km';
+  }
+  return { fixe, sig, entier, duree, facteur, uneHeure, ecartAns, grandNombre, distanceMetres, sansZeros };
+})();
+</script>
+
+<!-- =====================================================================
+     INTERFACE
+     ===================================================================== -->
+<script>
+(() => {
+"use strict";
+const K = CONSTANTES, P = Physique, F = Format;
+const $ = (id) => document.getElementById(id);
+const NBSP = ' ';
+
+/* ---------- Couleurs (clair / sombre) et canvas net ---------- */
+const coul = {};
+function lireCouleurs() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const n of ['fg', 'muted', 'line', 'card', 'soft', 'accent', 'photon', 'plus', 'minus', 'earth', 'land'])
+    coul[n] = cs.getPropertyValue('--' + n).trim();
+}
+function canvas2d(cv) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  const w = cv.clientWidth, h = cv.clientHeight;
+  const W = Math.round(w * dpr), H = Math.round(h * dpr);
+  if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  return { ctx, w, h };
+}
+function remplirCurseur(input) {
+  const p = (input.value - input.min) / (input.max - input.min) * 100;
+  input.style.setProperty('--pct', p + '%');
+}
+function cercle(ctx, x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); }
+
+/* ---------- Onglets ---------- */
+const onglets = [...document.querySelectorAll('[role=tab]')];
+let actif = 'vitesse';
+function ouvrir(id, focus) {
+  if (!document.getElementById(id)) id = 'vitesse';
+  actif = id;
+  for (const b of onglets) {
+    const oui = b.getAttribute('aria-controls') === id;
+    b.setAttribute('aria-selected', oui);
+    b.tabIndex = oui ? 0 : -1;
+    $(b.getAttribute('aria-controls')).hidden = !oui;
+    if (oui && focus) b.focus();
+  }
+  if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+  dessinerTout();
+}
+onglets.forEach((b, i) => {
+  b.addEventListener('click', () => ouvrir(b.getAttribute('aria-controls')));
+  b.addEventListener('keydown', (ev) => {
+    const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
+    if (d) { ev.preventDefault(); ouvrir(onglets[(i + d + onglets.length) % onglets.length].getAttribute('aria-controls'), true); }
+  });
+});
+
+/* =====================================================================
+   1. VITESSE
+   ===================================================================== */
+const V = { p: 0, d: 0, dec: 0, beta: 0, e: 1, gamma: 1, gm1: 0, T: 20 };
+const curV = $('v-vitesse'), curT = $('v-duree');
+
+// Curseur non linéaire : 0 → 0 %, 250 → 90 %, 500 → 99 %, 750 → 99,9 %, 1000 → 99,99 %.
+// On calcule directement d = 100 − vitesse (en %) : pas de soustraction près de c.
+function deficitDepuisCurseur(s) {
+  const d = 100 * Math.pow(10, -4 * s / 1000);
+  const pas = d >= 10 ? 1 : d >= 1 ? 0.1 : d >= 0.1 ? 0.01 : 0.001;
+  return Math.max(0.01, Number((Math.round(d / pas) * pas).toFixed(3)));
+}
+function curseurDepuisDeficit(d) { return Math.round(-Math.log10(d / 100) / 4 * 1000); }
+
+function reglerVitesse(d, depuisCurseur) {
+  V.d = d;
+  V.dec = d >= 10 ? 0 : d >= 1 ? 1 : d >= 0.1 ? 2 : 3;
+  V.p = Number((100 - d).toFixed(V.dec));
+  V.beta = V.p / 100;
+  V.e = d / 100;
+  V.gamma = P.gamma(V.beta, V.e);
+  V.gm1 = P.gammaMoins1(V.beta, V.e);
+  if (!depuisCurseur) curV.value = curseurDepuisDeficit(d);
+  remplirCurseur(curV);
+  const pct = F.sansZeros(F.fixe(V.p, V.dec)) + NBSP + '%';
+  $('v-vitesse-txt').textContent = pct + ' de c';
+  curV.setAttribute('aria-valuetext', pct + ' de la vitesse de la lumière');
+  for (const b of $('v-puces').children) b.setAttribute('aria-pressed', Number(b.dataset.d) === d);
+  majVitesse();
+}
+function majVitesse() {
+  V.T = Number(curT.value);
+  remplirCurseur(curT);
+  $('v-duree-txt').textContent = V.T + NBSP + (V.T >= 2 ? 'ans' : 'an');
+  // γ : 3 chiffres significatifs, ou assez de décimales pour voir qu'il dépasse 1
+  let dec = Math.max(0, 2 - Math.floor(Math.log10(V.gamma)));
+  if (V.gm1 > 0) dec = Math.max(dec, 1 - Math.floor(Math.log10(V.gm1)));
+  $('v-gamma').textContent = F.sansZeros(F.fixe(V.gamma, Math.min(dec, 12)));
+  $('v-un-an').textContent = V.gm1 < 0.01 ? (V.gm1 === 0 ? '1 an' : '1 an + ' + F.duree(V.gm1 * K.an)) : F.sig(V.gamma, 3) + ' ans';
+  trajet.t = 0; trajet.actif = false;
+  $('v-lancer').textContent = 'Lancer';
+  afficherAges(0);
+  remettreHorloges();
+  dessinerVoyage();
+}
+curV.addEventListener('input', () => reglerVitesse(deficitDepuisCurseur(Number(curV.value)), true));
+curT.addEventListener('input', majVitesse);
+$('v-puces').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) reglerVitesse(Number(b.dataset.d)); });
+
+/* ---- Le voyage animé (10 s, quelle que soit la durée) ---- */
+const DUREE_ANIM = 10;
+const trajet = { t: 0, actif: false };
+$('v-lancer').addEventListener('click', () => {
+  trajet.t = 0; trajet.actif = true;
+  $('v-lancer').textContent = 'Rejouer';
+});
+function afficherAges(p) {
+  const r = P.jumeaux(V.beta, V.e, V.T);
+  $('age-terre').textContent = F.fixe(30 + V.T * p, 1) + NBSP + 'ans';
+  $('age-voyageur').textContent = F.fixe(30 + r.voyageur * p, 1) + NBSP + 'ans';
+  const ecart = r.ecart * p;
+  $('v-ecart').textContent = p === 0
+    ? 'Au retour, le voyageur aura ' + (r.ecart > 0 ? F.ecartAns(r.ecart) + ' de moins.' : 'le même âge.')
+    : (p < 1 ? 'Écart : ' : 'Au retour, écart : ') + (ecart > 0 ? F.ecartAns(ecart) : '0');
+}
+// Étoiles fixes (pseudo-aléatoires, toujours les mêmes)
+const etoiles = (() => { let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647; return Array.from({ length: 34 }, () => [r(), r(), r() * 0.9 + 0.3]); })();
+
+function dessinerTerre(ctx, x, y, r) {
+  ctx.save();
+  cercle(ctx, x, y, r); ctx.fillStyle = coul.earth; ctx.fill(); ctx.clip();
+  ctx.fillStyle = coul.land;
+  cercle(ctx, x - r * 0.35, y - r * 0.25, r * 0.45); ctx.fill();
+  cercle(ctx, x + r * 0.45, y + r * 0.4, r * 0.38); ctx.fill();
+  ctx.restore();
+}
+function dessinerFusee(ctx, x, y, angle, flamme) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
+  if (flamme) {
+    ctx.fillStyle = coul.photon;
+    ctx.beginPath(); ctx.moveTo(-8, -3.5); ctx.lineTo(-15 - 4 * Math.random(), 0); ctx.lineTo(-8, 3.5); ctx.fill();
+  }
+  ctx.fillStyle = coul.fg;
+  ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-11, -8); ctx.lineTo(-9, -3); ctx.lineTo(-9, 3); ctx.lineTo(-11, 8); ctx.lineTo(-6, 4); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(12, 0); ctx.quadraticCurveTo(6, -6, -9, -4.5); ctx.lineTo(-9, 4.5); ctx.quadraticCurveTo(6, 6, 12, 0); ctx.fill();
+  ctx.fillStyle = coul.accent; cercle(ctx, 3, 0, 1.9); ctx.fill();
+  ctx.restore();
+}
+function dessinerVoyage() {
+  const { ctx, w, h } = canvas2d($('cv-voyage'));
+  if (w < 60) return;   // onglet caché : rien à dessiner
+  for (const [ex, ey, er] of etoiles) { ctx.fillStyle = coul.muted; ctx.globalAlpha = 0.45; cercle(ctx, ex * w, ey * (h - 18), er); ctx.fill(); }
+  ctx.globalAlpha = 1;
+  const xT = 22, yM = h / 2 - 4, R = 11;               // Terre, milieu des voies, rayon du demi-tour
+  const x0 = xT + 24, D = V.beta * Math.max(0, w - x0 - 34);
+  dessinerTerre(ctx, xT, yM, 15);
+  ctx.fillStyle = coul.muted; ctx.font = '12px system-ui,sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Terre', xT, yM + 31);
+  // Trajet prévu (pointillés) : aller en haut, demi-tour, retour en bas
+  ctx.strokeStyle = coul.line; ctx.lineWidth = 2; ctx.setLineDash([4, 5]);
+  ctx.beginPath(); ctx.moveTo(x0, yM - R); ctx.lineTo(x0 + D, yM - R); ctx.arc(x0 + D, yM, R, -Math.PI / 2, Math.PI / 2); ctx.lineTo(x0, yM + R); ctx.stroke();
+  ctx.setLineDash([]);
+  // Point de demi-tour
+  const al = V.beta * V.T / 2;
+  const txt = 'demi-tour à ' + (al > 0 ? F.sig(al, 3) : '0') + ' al';
+  ctx.textAlign = 'right'; ctx.fillStyle = coul.muted;
+  ctx.fillText(txt, Math.min(w - 4, Math.max(x0 + D + R + 2, ctx.measureText(txt).width + 4)), yM - R - 13);
+  // Position de la fusée
+  const p = Math.min(1, trajet.t / DUREE_ANIM);
+  const L = 2 * D + Math.PI * R;
+  let s = V.beta > 0 ? p * L : 0, x, y, a;
+  ctx.strokeStyle = coul.accent; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x0, yM - R);
+  if (s <= D) { x = x0 + s; y = yM - R; a = 0; ctx.lineTo(x, y); }
+  else if (s <= D + Math.PI * R) {
+    const th = -Math.PI / 2 + (s - D) / R;
+    x = x0 + D + R * Math.cos(th); y = yM + R * Math.sin(th); a = th + Math.PI / 2;
+    ctx.lineTo(x0 + D, yM - R); ctx.arc(x0 + D, yM, R, -Math.PI / 2, th);
+  } else {
+    x = x0 + D - (s - D - Math.PI * R); y = yM + R; a = Math.PI;
+    ctx.lineTo(x0 + D, yM - R); ctx.arc(x0 + D, yM, R, -Math.PI / 2, Math.PI / 2); ctx.lineTo(x, y);
+  }
+  if (s > 0) ctx.stroke();
+  dessinerFusee(ctx, x, y, a, trajet.actif && V.beta > 0);
+}
+function animerVoyage(dt) {
+  if (!trajet.actif) return;
+  trajet.t = Math.min(DUREE_ANIM, trajet.t + dt);
+  const p = trajet.t / DUREE_ANIM;
+  afficherAges(p);
+  if (p >= 1) trajet.actif = false;
+  dessinerVoyage();
+}
+
+/* ---- Horloge à lumière : mêmes réglages dans les deux vues ---- */
+const VITESSE_PHOTON = 105;   // px/s, identique dans les deux vues
+const ECART_MIROIRS = 64;     // px
+const TIC_REPOS = 2 * ECART_MIROIRS / VITESSE_PHOTON;   // un aller-retour, en s
+const Y_HAUT = 20, Y_BAS = Y_HAUT + ECART_MIROIRS, MARGE_EXT = 22;
+const hl = { pIn: 0, pExt: 0, x: 0, tour: 0, trace: [] };   // trace : coins du zigzag (x « monde », y)
+function remettreHorloges() {
+  hl.pIn = 0; hl.pExt = 0; hl.x = 0; hl.tour = 0; hl.trace = [[0, Y_BAS]];
+  $('duree-int').textContent = '1 tic = ' + F.sig(TIC_REPOS, 2) + ' s';
+  $('duree-ext').textContent = V.gm1 === 0 ? 'même durée' : '1 tic = γ × ' + F.sig(TIC_REPOS, 2) + ' s = ' + F.duree(TIC_REPOS * V.gamma);
+  majTics();
+}
+function majTics() {
+  $('tics-int').textContent = F.entier(Math.floor(hl.pIn));
+  $('tics-ext').textContent = F.entier(Math.floor(hl.pExt));
+}
+function hauteur(phase) { const f = phase - Math.floor(phase); return ECART_MIROIRS * (f < 0.5 ? 2 * f : 2 - 2 * f); }
+function dessinerBoitier(ctx, x, yH, yB) {
+  ctx.strokeStyle = coul.fg; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x - 15, yH); ctx.lineTo(x + 15, yH); ctx.moveTo(x - 15, yB); ctx.lineTo(x + 15, yB); ctx.stroke();
+  ctx.strokeStyle = coul.line; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(x - 15, yH); ctx.lineTo(x - 15, yB); ctx.moveTo(x + 15, yH); ctx.lineTo(x + 15, yB); ctx.stroke();
+}
+function dessinerPhoton(ctx, x, y) {
+  ctx.fillStyle = coul.photon; ctx.globalAlpha = 0.25; cercle(ctx, x, y, 8); ctx.fill();
+  ctx.globalAlpha = 1; cercle(ctx, x, y, 4); ctx.fill();
+}
+function dessinerHorloges() {
+  const yH = Y_HAUT, yB = Y_BAS;
+  // a) intérieur
+  let { ctx, w } = canvas2d($('cv-int'));
+  if (w < 60) return;
+  dessinerBoitier(ctx, w / 2, yH, yB);
+  dessinerPhoton(ctx, w / 2, yB - hauteur(hl.pIn));
+  // b) extérieur : l'horloge avance, la lumière trace un zigzag
+  ({ ctx, w } = canvas2d($('cv-ext')));
+  const marge = MARGE_EXT, champ = w - 2 * marge;
+  const decal = (hl.x + champ / 2) % champ;            // position à l'écran (repart à gauche en sortant)
+  const xEcran = marge + decal, origine = hl.x - decal; // origine : décalage monde → écran
+  const yP = yB - hauteur(hl.pExt);
+  if (V.beta > 0 && hl.trace.length) {
+    ctx.strokeStyle = coul.photon; ctx.lineWidth = 2; ctx.globalAlpha = 0.75;
+    ctx.beginPath();
+    hl.trace.forEach(([tx, ty], i) => (i ? ctx.lineTo : ctx.moveTo).call(ctx, marge + tx - origine, ty));
+    ctx.lineTo(xEcran, yP); ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  dessinerBoitier(ctx, xEcran, yH, yB);
+  dessinerPhoton(ctx, xEcran, yP);
+  if (V.beta > 0) {
+    ctx.fillStyle = coul.muted; ctx.font = '12px system-ui,sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('→ ' + F.sansZeros(F.fixe(V.p, V.dec)) + NBSP + '% de c', 8, 98);
+  }
+}
+function animerHorloges(dt) {
+  hl.pIn += dt / TIC_REPOS;
+  const pAvant = hl.pExt, xAvant = hl.x;
+  hl.pExt += dt / (TIC_REPOS * V.gamma);   // vitesse verticale = c/γ, horizontale = β·c → même vitesse totale
+  hl.x += V.beta * VITESSE_PHOTON * dt;
+  // Coins du zigzag : chaque fois que la lumière touche un miroir
+  for (let k = Math.floor(pAvant * 2) + 1; k <= Math.floor(hl.pExt * 2); k++) {
+    const frac = (k / 2 - pAvant) / (hl.pExt - pAvant);
+    hl.trace.push([xAvant + frac * (hl.x - xAvant), k % 2 ? Y_HAUT : Y_BAS]);
+  }
+  // L'horloge sort à droite et réapparaît à gauche : on repart d'un tracé vide
+  const champ = $('cv-ext').clientWidth - 2 * MARGE_EXT;
+  const tour = champ > 0 ? Math.floor((hl.x + champ / 2) / champ) : 0;
+  if (tour !== hl.tour) { hl.tour = tour; hl.trace = [[hl.x, Y_BAS - hauteur(hl.pExt)]]; }
+  if (hl.trace.length > 60) hl.trace.splice(0, hl.trace.length - 60);
+  majTics();
+  dessinerHorloges();
+}
+
+/* =====================================================================
+   2. GRAVITÉ
+   ===================================================================== */
+const rsTN = P.rayonSchwarzschild(K.masseTrouNoir);
+const ASTRES = {
+  terre:    { M: K.masseTerre, R: K.rayonTerre, info: 'Notre planète, rayon ' + F.entier(K.rayonTerre / 1e3) + NBSP + 'km.' },
+  soleil:   { M: K.masseSoleil, R: K.rayonSoleil, info: F.sig(K.masseSoleil / K.masseTerre, 3) + ' fois la masse de la Terre, rayon ' + F.entier(K.rayonSoleil / 1e3) + NBSP + 'km.' },
+  naine:    { M: K.masseNaineBlanche, R: K.rayonNaineBlanche, info: '0,6 Soleil tassé dans une boule de ' + F.entier(K.rayonNaineBlanche / 1e3) + NBSP + 'km de rayon, à peine plus grosse que la Terre.' },
+  neutrons: { M: K.masseEtoileNeutrons, R: K.rayonEtoileNeutrons, info: '1,4 Soleil dans une boule de ' + F.entier(K.rayonEtoileNeutrons / 1e3) + NBSP + 'km de rayon : la taille d\'une ville.' },
+  trou:     { M: K.masseTrouNoir, info: '10 masses solaires. Horizon (rayon de Schwarzschild) : ' + F.sig(rsTN / 1e3, 3) + NBSP + 'km. Rien n\'en ressort.' },
+};
+const G = { astre: 'terre', kMoins1: 1, res: null, grossi: 1, tIci: 0, tLoin: 0 };
+const curTN = $('tn-dist');
+// Curseur trou noir : r de 1,001 à 10 rayons de Schwarzschild, en échelle log sur (r/rs − 1)
+const TN_MIN = 0.001, TN_MAX = 9;
+function kDepuisCurseur(s) { return Number((TN_MIN * Math.pow(TN_MAX / TN_MIN, s / 1000)).toPrecision(2)); }
+function curseurDepuisK(k) { return Math.round(1000 * Math.log(k / TN_MIN) / Math.log(TN_MAX / TN_MIN)); }
+
+function choisirAstre(id) {
+  G.astre = id;
+  for (const b of $('astres').children) { const oui = b.dataset.astre === id; b.setAttribute('aria-checked', oui); b.tabIndex = oui ? 0 : -1; }
+  $('astre-info').textContent = ASTRES[id].info;
+  $('bloc-tn').hidden = id !== 'trou';
+  majGravite();
+}
+function majGravite() {
+  const a = ASTRES[G.astre];
+  if (G.astre === 'trou') {
+    G.res = P.graviteTrouNoir(G.kMoins1);
+    remplirCurseur(curTN);
+    const k = 1 + G.kMoins1;
+    const dec = Math.max(0, 1 - Math.floor(Math.log10(G.kMoins1)));
+    const kTxt = F.sansZeros(F.fixe(k, dec));
+    $('tn-txt').textContent = kTxt + ' × l\'horizon';
+    curTN.setAttribute('aria-valuetext', kTxt + ' fois le rayon de l\'horizon');
+    $('tn-km').textContent = 'Soit ' + F.sig(k * rsTN / 1e3, 4) + NBSP + 'km du centre, ' + F.sig(G.kMoins1 * rsTN / 1e3, 2) + NBSP + 'km au-dessus de l\'horizon.';
+  } else {
+    G.res = P.gravite(P.compacite(a.M, a.R));
+  }
+  const { facteur, deficit } = G.res;
+  // Écart invisible à l'œil (moins de 1 %) : on le grossit d'une puissance de 10, et on le dit.
+  G.grossi = deficit >= 0.01 ? 1 : Math.pow(10, Math.ceil(Math.log10(0.1 / deficit)));
+  const el = $('grossi');
+  el.hidden = G.grossi === 1;
+  el.textContent = 'Écart grossi ' + F.grandNombre(G.grossi) + ' de fois pour être visible.';
+  $('g-facteur').textContent = F.facteur(facteur, deficit);
+  $('g-retard').textContent = F.duree(deficit * K.an);
+  $('g-heure').textContent = F.uneHeure(facteur, deficit);
+  G.tIci = 0; G.tLoin = 0;
+  dessinerGravite();
+}
+$('astres').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) choisirAstre(b.dataset.astre); });
+$('astres').addEventListener('keydown', (ev) => {
+  const d = ev.key === 'ArrowRight' || ev.key === 'ArrowDown' ? 1 : ev.key === 'ArrowLeft' || ev.key === 'ArrowUp' ? -1 : 0;
+  if (!d) return;
+  ev.preventDefault();
+  const ids = Object.keys(ASTRES), i = (ids.indexOf(G.astre) + d + ids.length) % ids.length;
+  choisirAstre(ids[i]);
+  $('astres').children[i].focus();
+});
+curTN.addEventListener('input', () => { G.kMoins1 = kDepuisCurseur(Number(curTN.value)); majGravite(); });
+
+function dessinerCadran(ctx, x, y, r, t, titre, couleur) {
+  cercle(ctx, x, y, r); ctx.fillStyle = coul.soft; ctx.fill();
+  ctx.lineWidth = 3; ctx.strokeStyle = couleur; ctx.stroke();
+  ctx.strokeStyle = coul.muted; ctx.lineCap = 'round';
+  for (let i = 0; i < 12; i++) {
+    const a = i * Math.PI / 6, l = i % 3 ? 4 : 8;
+    ctx.lineWidth = i % 3 ? 1.5 : 2.5;
+    ctx.beginPath(); ctx.moveTo(x + Math.sin(a) * (r - 5), y - Math.cos(a) * (r - 5)); ctx.lineTo(x + Math.sin(a) * (r - 5 - l), y - Math.cos(a) * (r - 5 - l)); ctx.stroke();
+  }
+  // Aiguille des minutes (lente) et des secondes
+  const am = (t / 3600) * 2 * Math.PI, as = (t / 60) * 2 * Math.PI;
+  ctx.strokeStyle = coul.fg; ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.sin(am) * r * 0.5, y - Math.cos(am) * r * 0.5); ctx.stroke();
+  ctx.strokeStyle = couleur; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(x - Math.sin(as) * 8, y + Math.cos(as) * 8); ctx.lineTo(x + Math.sin(as) * (r - 9), y - Math.cos(as) * (r - 9)); ctx.stroke();
+  cercle(ctx, x, y, 3.5); ctx.fillStyle = couleur; ctx.fill();
+  ctx.textAlign = 'center'; ctx.fillStyle = coul.fg; ctx.font = '600 14px system-ui,sans-serif';
+  ctx.fillText(titre, x, y + r + 22);
+  const m = Math.floor(t / 60), s = t - 60 * m;
+  ctx.fillStyle = coul.muted; ctx.font = '13px system-ui,sans-serif';
+  ctx.fillText(m + ' min ' + F.fixe(Math.floor(s * 10) / 10, 1).padStart(4, '0') + ' s', x, y + r + 40);
+}
+function dessinerGravite() {
+  const { ctx, w } = canvas2d($('cv-grav'));
+  if (w < 60) return;
+  const r = Math.min(56, w / 4 - 12), y = r + 8;
+  dessinerCadran(ctx, w / 4, y, r, G.tIci, 'Ici', coul.accent);
+  dessinerCadran(ctx, 3 * w / 4, y, r, G.tLoin, 'Loin dans l\'espace', coul.muted);
+}
+function animerGravite(dt) {
+  G.tLoin += dt;
+  G.tIci += dt * (1 - G.res.deficit * G.grossi);   // rythme réel, ou écart grossi s'il est invisible
+  dessinerGravite();
+}
+
+/* ---- Altitude sur Terre ---- */
+const curAlt = $('alt');
+function majAltitude() {
+  const h = Number(curAlt.value);
+  remplirCurseur(curAlt);
+  const txt = F.entier(h) + NBSP + 'm';
+  $('alt-txt').textContent = txt;
+  curAlt.setAttribute('aria-valuetext', txt);
+  const rel = P.avanceAltitude(h);
+  const plus = (s) => (h > 0 ? '+' : '') + s;
+  $('alt-jour').textContent = plus(F.duree(rel * K.jour));
+  $('alt-an').textContent = plus(F.duree(rel * K.an));
+  $('alt-vie').textContent = plus(F.duree(rel * 80 * K.an));
+}
+curAlt.addEventListener('input', majAltitude);
+
+/* =====================================================================
+   3. LES DEUX — satellite
+   ===================================================================== */
+const ALT_MIN = 400e3, ALT_MAX = 40000e3;   // m
+const curSat = $('sat');
+const REPERES = [
+  { h: 400e3, court: 'ISS', long: 'Station spatiale (ISS)' },
+  { h: P.altitudeEquilibre, court: 'Équilibre', long: 'les deux effets s\'annulent', eq: true },
+  { h: 20200e3, court: 'GPS', long: 'satellites GPS' },
+  { h: 35786e3, court: 'Géo', long: 'orbite géostationnaire' },
+];
+const S = { h: 20200e3, res: null, angle: 0 };
+function curseurDepuisAlt(h) { return 1000 * Math.log(h / ALT_MIN) / Math.log(ALT_MAX / ALT_MIN); }
+function altDepuisCurseur(s) { return Number((ALT_MIN * Math.pow(ALT_MAX / ALT_MIN, s / 1000)).toPrecision(3)); }
+// Repères placés sous le curseur, alignés sur le centre du bouton
+(() => {
+  const box = $('reperes');
+  for (const r of REPERES) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'repere' + (r.eq ? ' eq' : '');
+    const f = curseurDepuisAlt(r.h) / 1000;
+    if (f < 0.05) b.classList.add('gauche');
+    if (f > 0.95) b.classList.add('droite');
+    // Centre du bouton du curseur ; ±3 px quand l'étiquette est calée sur un bord, pour garder le trait pile dessus
+    const decalage = f < 0.05 ? ' - 3px' : f > 0.95 ? ' + 3px' : '';
+    b.style.left = `calc(var(--thumb) / 2${decalage} + ${f.toFixed(4)} * (100% - var(--thumb)))`;
+    b.textContent = r.court;
+    b.setAttribute('aria-label', r.court + ' : ' + F.entier(r.h / 1e3) + ' km');
+    b.addEventListener('click', () => reglerSatellite(r.h));
+    r.el = b; box.appendChild(b);
+  }
+})();
+function reglerSatellite(h, depuisCurseur) {
+  S.h = h;
+  if (!depuisCurseur) curSat.value = Math.round(curseurDepuisAlt(h));
+  remplirCurseur(curSat);
+  const res = S.res = P.satellite(h);
+  const rep = REPERES.find((r) => Math.abs(r.h - h) < 1);
+  for (const r of REPERES) r.el.setAttribute('aria-pressed', r === rep);
+  const altTxt = F.entier(h / 1e3) + NBSP + 'km';
+  $('sat-txt').textContent = altTxt;
+  curSat.setAttribute('aria-valuetext', altTxt + (rep ? ', ' + rep.long : ''));
+  $('sat-info').textContent = (rep ? rep.long.charAt(0).toUpperCase() + rep.long.slice(1) + ' · ' : '') +
+    'vitesse ' + F.sig(res.v / 1e3, 3) + NBSP + 'km/s · un tour en ' + F.duree(res.periode);
+  const val = (x) => (Math.abs(x) < 0.005 ? '0' : Math.abs(x) >= 10 ? F.fixe(x, 1, true) : F.fixe(x, 2, true)) + NBSP + 'µs/j';
+  $('b-grav').textContent = val(res.graviteUsJour);
+  $('b-vit').textContent = val(-res.vitesseUsJour);
+  $('b-tot').textContent = val(res.totalUsJour);
+  barre($('r-grav'), res.graviteUsJour); barre($('r-vit'), -res.vitesseUsJour); barre($('r-tot'), res.totalUsJour);
+  $('sat-phrase').textContent = res.erreurMetresJour < 1
+    ? 'À cette altitude, les deux effets s\'annulent : un GPS placé ici ne dériverait pas.'
+    : 'Sans correction, un GPS à cette altitude se tromperait d\'environ ' + F.distanceMetres(res.erreurMetresJour) + ' par jour.';
+  dessinerOrbite();
+}
+// Échelle des barres fixe (max sur toute la plage), pour voir l'effet de l'altitude
+const ECHELLE_BARRES = Math.max(P.satellite(ALT_MAX).graviteUsJour, P.satellite(ALT_MIN).vitesseUsJour) * 1.04;
+function barre(el, x) {
+  const l = Math.min(50, Math.abs(x) / ECHELLE_BARRES * 50);
+  el.style.width = l + '%';
+  el.style.left = (x >= 0 ? 50 : 50 - l) + '%';
+}
+curSat.addEventListener('input', () => reglerSatellite(altDepuisCurseur(Number(curSat.value)), true));
+
+// Orbite à l'échelle ; animation accélérée 1 500 fois
+const ACCEL_ORBITE = 1500;
+function dessinerOrbite() {
+  const { ctx, w, h } = canvas2d($('cv-orbite'));
+  if (w < 60) return;
+  const cx = w / 2, cy = h / 2, ech = (h / 2 - 8) / (K.rayonTerre + ALT_MAX);
+  // Altitude d'équilibre
+  ctx.setLineDash([3, 4]); ctx.strokeStyle = coul.accent; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.7;
+  cercle(ctx, cx, cy, (K.rayonTerre + P.altitudeEquilibre) * ech); ctx.stroke();
+  ctx.setLineDash([]); ctx.globalAlpha = 1;
+  // Orbite actuelle
+  const rO = (K.rayonTerre + S.h) * ech;
+  ctx.strokeStyle = coul.muted; ctx.lineWidth = 1.5; cercle(ctx, cx, cy, rO); ctx.stroke();
+  dessinerTerre(ctx, cx, cy, K.rayonTerre * ech);
+  // Satellite
+  const sx = cx + rO * Math.cos(S.angle), sy = cy - rO * Math.sin(S.angle);
+  ctx.fillStyle = coul.fg; ctx.fillRect(sx - 7, sy - 2, 14, 4);
+  ctx.fillStyle = coul.accent; ctx.fillRect(sx - 3, sy - 3.5, 6, 7);
+  // Légende
+  ctx.font = '12px system-ui,sans-serif'; ctx.fillStyle = coul.muted; ctx.textAlign = 'left';
+  ctx.fillText('À l\'échelle', 4, 14);
+  ctx.fillText('Accéléré ×' + NBSP + F.entier(ACCEL_ORBITE), 4, 30);
+  ctx.textAlign = 'right'; ctx.fillStyle = coul.accent;
+  ctx.fillText('- - équilibre', w - 4, 14);
+}
+function animerOrbite(dt) {
+  S.angle = (S.angle + dt * ACCEL_ORBITE * 2 * Math.PI / S.res.periode) % (2 * Math.PI);
+  dessinerOrbite();
+}
+
+/* =====================================================================
+   Boucle d'animation (seul l'onglet visible est animé)
+   ===================================================================== */
+function dessinerTout() {
+  if (actif === 'vitesse') { dessinerVoyage(); dessinerHorloges(); }
+  else if (actif === 'gravite') dessinerGravite();
+  else dessinerOrbite();
+}
+let avant = null;
+function boucle(t) {
+  const dt = avant === null ? 0 : Math.min(0.1, (t - avant) / 1000);
+  avant = t;
+  if (actif === 'vitesse') { animerVoyage(dt); animerHorloges(dt); }
+  else if (actif === 'gravite') animerGravite(dt);
+  else animerOrbite(dt);
+  requestAnimationFrame(boucle);
+}
+
+/* ---------- Démarrage ---------- */
+lireCouleurs();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { lireCouleurs(); dessinerTout(); });
+addEventListener('resize', dessinerTout);
+reglerVitesse(13);
+G.kMoins1 = 1; curTN.value = curseurDepuisK(G.kMoins1);
+choisirAstre('terre');
+curAlt.value = 1000; majAltitude();
+reglerSatellite(20200e3);
+ouvrir(location.hash.slice(1) || 'vitesse');
+addEventListener('hashchange', () => ouvrir(location.hash.slice(1)));
+requestAnimationFrame(boucle);
+})();
+</script>
+</body>
+</html>
