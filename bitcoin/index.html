@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7931a">
+<meta name="description" content="L'histoire de Satoshi et de Bitcoin, le trilemme de la blockchain, et les façons d'acheter du bitcoin.">
+<title>Bitcoin, de A à B</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23f7931a'/%3E%3Ctext x='32' y='45' font-size='38' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23fff' transform='rotate(14 32 32)'%3E%E2%82%BF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Ubuntu:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday learning: a story told calmly to a newcomer, then two practical chapters
+   IDEA the deck behaves like a blockchain: each slide is a block, the progress bar is the chain
+   PICTURE one real artefact per slide: the white paper, block 0, Satoshi's forum posts, the node network, the live triangle, the custody diagram
+   COLOUR white ground, ink #17140f, Bitcoin orange #f7931a in full-bleed chapter covers and on the chain; night #15120e
+   TYPE Ubuntu 700 (the Bitcoin wordmark's face) + Inter
+   LAYOUT top: chapter tabs and chain; one slide per screen, text then artefact (side by side above 880px); bottom: previous, count, next */
+:root{color-scheme:light;--bg:#fff;--ink:#17140f;--muted:#5d564c;--panel:#f4f1ec;--line:#e0d9cf;--or:#f7931a;--or-ink:#a14d00;--no:#c0352b;--paper:#fff;--paper-ink:#17140f}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#15120e;--ink:#f3eee6;--muted:#b3aa9c;--panel:#221d17;--line:#3b342b;--or-ink:#ffb257;--no:#ff7a6b;--paper:#f3eee6}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#15120e;--ink:#f3eee6;--muted:#b3aa9c;--panel:#221d17;--line:#3b342b;--or-ink:#ffb257;--no:#ff7a6b;--paper:#f3eee6}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,.disp{font-family:Ubuntu,Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.05;text-wrap:balance;margin:0}
+p{margin:0}
+a{color:var(--or-ink)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+/* Barre du haut */
+.top{padding:calc(8px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--line);background:var(--bg)}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1080px;margin:0 auto}
+.brand{font-family:Ubuntu,sans-serif;font-weight:700;font-size:16px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.coin{width:22px;height:22px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-size:15px;transform:rotate(14deg)}
+#tabs{display:flex;gap:4px}
+#tabs button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:8px 12px;font-size:15px;font-weight:600;cursor:pointer;min-height:40px}
+#tabs button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#chain{display:grid;gap:3px;max-width:1080px;margin:10px auto 0}
+#chain button{height:12px;border:0;border-radius:2px;padding:0;background:var(--line);cursor:pointer;transition:background .25s}
+#chain button.done{background:var(--or)}
+#chain button.now{background:var(--ink)}
+/* Diaporama */
+#deck{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}
+#deck::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overscroll-behavior-y:contain;padding:clamp(20px,4vw,48px) max(5vw,16px,env(safe-area-inset-right)) 32px max(5vw,16px,env(safe-area-inset-left))}
+.in{max-width:1080px;margin:0 auto;min-height:100%;display:grid;align-content:center;gap:20px}
+.trig{grid-template-areas:"t" "f" "r"}
+@media (min-width:880px){.trig{grid-template-areas:"t f" "r f"}}
+@media (min-width:880px){.in.two{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;column-gap:56px}}
+.txt{display:grid;gap:14px;max-width:62ch}
+.when{font-family:Ubuntu,sans-serif;font-weight:700;font-size:clamp(22px,5vw,28px);color:var(--or-ink);line-height:1.1}
+h2{font-size:clamp(30px,7vw,46px)}
+.small{font-size:14px;color:var(--muted)}
+.lead{font-size:clamp(18px,2.4vw,20px)}
+.box{background:var(--panel);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
+.box b{font-family:Ubuntu,sans-serif}
+.fact{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:baseline}
+.tag{font-size:13px;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;background:var(--ink);color:var(--bg)}
+.tag.hyp{background:transparent;color:var(--ink);border:1.5px dashed var(--ink)}
+ul.dots{margin:0;padding-left:1.1em;display:grid;gap:6px}
+/* Couvertures orange */
+.cover{background:var(--or);color:#17140f}
+.cover .small{color:#3d2a12}
+.cover h1{font-size:clamp(40px,10vw,72px)}
+.cover h2{font-size:clamp(36px,8.5vw,60px)}
+.cover .num{font-family:Ubuntu,sans-serif;font-weight:700;font-size:clamp(56px,14vw,110px);line-height:.9}
+.chapters{display:grid;gap:10px}
+.chapters button{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;text-align:left;background:#17140f;color:#fff;border:0;border-radius:12px;padding:14px 16px;cursor:pointer;position:relative}
+.chapters button+button::before{content:"";position:absolute;left:30px;top:-11px;width:4px;height:12px;background:#17140f}
+.chapters .n{grid-row:span 2;font-family:Ubuntu,sans-serif;font-weight:700;font-size:34px;line-height:1;color:var(--or)}
+.chapters strong{font-family:Ubuntu,sans-serif;font-size:20px}
+.chapters span{font-size:15px;color:#d9d2c6}
+.ab{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 14px;align-items:start}
+.ab .pt{font-family:Ubuntu,sans-serif;font-weight:700;font-size:28px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#17140f;color:var(--or)}
+/* Artefacts */
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:4px;padding:26px 22px;font-family:"Times New Roman",Times,Georgia,serif;text-align:center;box-shadow:0 10px 0 -4px var(--panel),0 20px 0 -8px var(--line)}
+.paper .t{font-size:clamp(20px,4.6vw,26px);font-weight:700;line-height:1.2}
+.paper .a{margin-top:12px;font-size:17px}
+.paper .m{font-size:15px;font-style:italic}
+.paper .abs{margin-top:16px;text-align:justify;font-size:14px;line-height:1.45}
+.blk{border:2px solid var(--ink);border-radius:10px;overflow:hidden}
+.blk .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--ink);color:var(--bg);padding:10px 14px;font-family:Ubuntu,sans-serif;font-weight:700}
+.blk .b{padding:14px;display:grid;gap:10px}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:14px;overflow-wrap:anywhere}
+.blk .msg{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:clamp(15px,3.6vw,18px);background:var(--panel);border-radius:8px;padding:12px;overflow-wrap:anywhere}
+.post{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.post .h{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);font-size:14px}
+.av{width:34px;height:34px;border-radius:50%;background:var(--or);color:#17140f;display:grid;place-items:center;font-family:Ubuntu,sans-serif;font-weight:700;flex:none}
+.post .who{font-weight:700;font-size:15px}
+.post .b{padding:14px;display:grid;gap:10px}
+.post .fr{font-size:clamp(18px,2.6vw,21px);line-height:1.45}
+.post .en{font-size:14px;color:var(--muted);font-style:italic;border-left:3px solid var(--line);padding-left:10px}
+.cut{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cut div{border:2px solid var(--ink);border-radius:10px;padding:12px 8px;text-align:center;position:relative;overflow:hidden}
+.cut b{display:block;font-family:Ubuntu,sans-serif;font-size:clamp(15px,3.8vw,19px)}
+.cut span{font-size:13px;color:var(--muted)}
+.cut div::after{content:"";position:absolute;left:-10%;top:50%;width:120%;height:3px;background:var(--no);transform:rotate(-14deg)}
+.stamp{justify-self:center;border:3px solid var(--no);color:var(--no);font-family:Ubuntu,sans-serif;font-weight:700;font-size:18px;border-radius:8px;padding:4px 12px;transform:rotate(-3deg)}
+.tl{display:grid;gap:0;border-left:3px solid var(--or);margin-left:6px}
+.tl div{display:grid;gap:2px;padding:0 0 16px 18px;position:relative}
+.tl div::before{content:"";position:absolute;left:-9.5px;top:5px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--or)}
+.tl div:last-child{padding-bottom:0}
+.tl b{font-family:Ubuntu,sans-serif;color:var(--or-ink);white-space:nowrap}
+.verdict{border:2px solid var(--ink);border-radius:12px;padding:18px;display:grid;gap:10px}
+.verdict .q{font-family:Ubuntu,sans-serif;font-weight:700;font-size:clamp(20px,4.4vw,26px);line-height:1.2}
+.fig{position:relative;min-height:300px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+svg text{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+/* Trilemme */
+#tri{min-height:290px}
+#tri .corner{position:absolute;z-index:1;transform:translate(-50%,-50%);width:122px;min-height:56px;border-radius:14px;border:2px solid var(--ink);background:var(--bg);cursor:pointer;padding:6px 8px;display:grid;line-height:1.15}
+#tri .corner b{font-family:Ubuntu,sans-serif;font-size:16px}
+#tri .corner span{font-size:13px;color:var(--muted)}
+#tri .corner[aria-pressed=true]{background:var(--or);border-color:var(--or);color:#17140f}
+#tri .corner[aria-pressed=true] span{color:#3d2a12}
+#tri .corner.lost{border-style:dashed;opacity:.75}
+.res{border-radius:14px;background:var(--panel);padding:14px 16px;display:grid;gap:6px;min-height:150px}
+.res h3{font-size:22px}
+.lost-l{font-size:14px;font-weight:700;color:var(--no)}
+.slider{display:grid;gap:4px}
+.slider label{font-weight:700;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.slider output{font-family:Ubuntu,sans-serif;font-size:22px;color:var(--or-ink);white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(to right,var(--or) var(--pct,0%),var(--line) var(--pct,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-11px;border-radius:50%;background:var(--bg);border:4px solid var(--or);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:var(--line)}
+input[type=range]::-moz-range-progress{height:8px;border-radius:4px;background:var(--or)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--bg);border:4px solid var(--or)}
+.ticks{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr));gap:10px}
+.kpi{background:var(--panel);border-radius:12px;padding:10px 12px}
+.kpi b{display:block;font-family:Ubuntu,sans-serif;font-size:clamp(22px,5vw,28px);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi span{font-size:14px;color:var(--muted)}
+.meter{display:grid;grid-template-columns:9.5em minmax(0,1fr);align-items:center;gap:6px 10px;font-size:15px;font-weight:600}
+.meter i{display:block;height:14px;border-radius:7px;background:var(--line);overflow:hidden}
+.meter i::after{content:"";display:block;height:100%;width:var(--w,50%);background:var(--c,var(--or));border-radius:7px;transition:width .3s}
+.who{font-family:Ubuntu,sans-serif;font-weight:700;font-size:19px}
+.slate{background:#2b2f2c;color:#eef0ea;border-radius:12px;padding:16px 18px;border:8px solid #8a6a45;display:grid;gap:4px;font-size:16px}
+.slate div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #5d635e;padding:3px 0}
+.slate div span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.slate .tot{border:0;font-weight:700;color:#ffc46b;padding-top:8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+/* Navigation du bas */
+.bot{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));border-top:1px solid var(--line);background:var(--bg)}
+.bot button{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:16px;cursor:pointer;padding:0 14px}
+#next{background:var(--ink);color:var(--bg);border-color:var(--ink);justify-self:end;min-width:9em}
+#prev{justify-self:start;min-width:6.5em}
+.bot button:disabled{opacity:.35;cursor:default}
+#count{font-family:Ubuntu,sans-serif;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:420px){.brand .full{display:none}#tabs button{padding:8px 10px;font-size:14px}}
+@media (max-width:600px){table{font-size:13px}th,td{padding:6px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flex;justify-content:space-between;gap:12px}.stack td::before{content:attr(data-l);font-weight:600;color:var(--muted)}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="toprow">
+    <div class="brand"><span class="coin" aria-hidden="true">₿</span><span>Bitcoin<span class="full">, de A à B</span></span></div>
+    <nav id="tabs" aria-label="Chapitres">
+      <button type="button" data-ch="satoshi" aria-selected="false">Histoire</button>
+      <button type="button" data-ch="trilemme" aria-selected="false">Trilemme</button>
+      <button type="button" data-ch="acheter" aria-selected="false">Acheter</button>
+    </nav>
+  </div>
+  <div id="chain" aria-label="Progression : chaque bloc est une diapo"></div>
+</header>
+
+<main id="deck" aria-roledescription="diaporama">
+
+<!-- ============ COUVERTURE ============ -->
+<section class="slide cover" data-ch="intro" aria-label="Couverture">
+  <div class="in two">
+    <div class="txt">
+      <h1>Bitcoin, de Satoshi à nous</h1>
+      <p class="lead">Comment un inconnu a créé Bitcoin, pourquoi il l'a perdu, la limite de la technologie, et comment en acheter.</p>
+      <p class="small">Glisse vers la gauche, ou touche un chapitre. Chaque petit bloc en haut est une diapo : la barre de progression est une chaîne de blocs.</p>
+    </div>
+    <div class="chapters">
+      <button type="button" data-go="satoshi"><span class="n">1</span><strong>L'histoire</strong><span>De Satoshi à la communauté, en passant par WikiLeaks</span></button>
+      <button type="button" data-go="trilemme"><span class="n">2</span><strong>Le trilemme</strong><span>La limite physique de toute blockchain</span></button>
+      <button type="button" data-go="acheter"><span class="n">3</span><strong>Acheter</strong><span>Revolut, Trade Republic, Bitstack, Kraken : du vrai bitcoin ou pas ?</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPITRE 1 ============ -->
+<section class="slide cover" data-ch="satoshi" aria-label="Chapitre 1">
+  <div class="in two">
+    <div class="txt">
+      <p class="num">1</p>
+      <h2>L'histoire : de Satoshi à la communauté</h2>
+    </div>
+    <div class="ab">
+      <span class="pt">A</span><p class="lead"><b>2008.</b> Un inconnu crée Bitcoin. Il écrit le code, il décide, il corrige.</p>
+      <span class="pt">B</span><p class="lead"><b>Aujourd'hui.</b> Bitcoin n'a plus de chef. Même si Satoshi revenait, il ne pourrait pas le reprendre.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">31 octobre 2008</p>
+      <h2>Un inconnu publie 9 pages</h2>
+      <p>En pleine crise financière, quelqu'un qui signe <b>Satoshi Nakamoto</b> envoie un document à une liste de diffusion de cryptographes. L'idée&nbsp;: envoyer de l'argent sur Internet <b>sans banque au milieu</b>.</p>
+      <p class="small">Aujourd'hui encore, personne ne sait qui est Satoshi&nbsp;: une personne ou un groupe.</p>
+    </div>
+    <div class="paper" aria-label="En-tête du livre blanc de Bitcoin">
+      <p class="t">Bitcoin: A Peer-to-Peer Electronic Cash System</p>
+      <p class="a">Satoshi Nakamoto</p>
+      <p class="m">satoshin@gmx.com<br>www.bitcoin.org</p>
+      <p class="abs"><b>Abstract.</b> A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution.</p>
+      <p class="small" style="margin-top:10px;font-family:Inter,sans-serif">Traduction&nbsp;: «&nbsp;Une version purement pair à pair de l'argent électronique permettrait d'envoyer des paiements en ligne directement d'une personne à une autre, sans passer par une institution financière.&nbsp;»</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">3 janvier 2009</p>
+      <h2>Le bloc n°&nbsp;0</h2>
+      <p>Satoshi lance le réseau. Dans le tout premier bloc, il grave le titre du journal <i>The Times</i> du jour&nbsp;: «&nbsp;Le ministre des Finances au bord d'un second sauvetage des banques&nbsp;».</p>
+      <p>Une preuve de date, et un message&nbsp;: Bitcoin naît en réaction aux banques sauvées avec l'argent public.</p>
+    </div>
+    <div class="blk" aria-label="Le bloc 0 de Bitcoin">
+      <div class="h"><span>Bloc n°&nbsp;0</span><span>3 janv. 2009</span></div>
+      <div class="b">
+        <p class="small">Message gravé à l'intérieur&nbsp;:</p>
+        <p class="msg">The Times 03/Jan/2009 Chancellor on brink of second bailout for banks</p>
+        <p class="small">Empreinte du bloc&nbsp;: <span class="mono">000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">12 janvier 2009 → 22 mai 2010</p>
+      <h2>Un jouet pour passionnés</h2>
+      <p><b>12 janvier 2009</b>&nbsp;: premier paiement. Satoshi envoie 10 bitcoins à Hal Finney, un cryptographe.</p>
+      <p><b>22 mai 2010</b>&nbsp;: Laszlo Hanyecz paie <b>deux pizzas 10&nbsp;000 bitcoins</b>. C'est le premier achat connu d'un objet réel. Le 22 mai est devenu le «&nbsp;Bitcoin Pizza Day&nbsp;».</p>
+    </div>
+    <div class="kpis" aria-label="Chiffres clés">
+      <div class="kpi"><b>10 BTC</b><span>Satoshi → Hal Finney</span></div>
+      <div class="kpi"><b>10&nbsp;000 BTC</b><span>pour 2 pizzas</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">15 août 2010</p>
+      <h2>Un bug, et Satoshi répare</h2>
+      <p>Une faille permet à quelqu'un de créer <b>plus de 184 milliards de bitcoins</b> d'un coup. Satoshi publie une correction en quelques heures, et le réseau repart sur la bonne chaîne.</p>
+      <p>À ce moment-là, Satoshi est encore <b>le chef</b>&nbsp;: c'est lui qui écrit le code, décide et corrige.</p>
+    </div>
+    <div class="blk" aria-label="Le bloc du bug">
+      <div class="h"><span>Bloc n°&nbsp;74&nbsp;638</span><span>15 août 2010</span></div>
+      <div class="b">
+        <p class="small">Montant créé par erreur&nbsp;:</p>
+        <p class="msg">184&nbsp;467&nbsp;440&nbsp;737,095 BTC</p>
+        <p class="stamp">Annulé</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">Décembre 2010</p>
+      <h2>WikiLeaks est coupé de l'argent</h2>
+      <p>WikiLeaks publie des câbles diplomatiques américains. En quelques jours, <b>PayPal, Mastercard et Visa bloquent les dons</b>. Aucun juge n'a rien ordonné&nbsp;: ce sont des entreprises qui décident.</p>
+      <p>Sur le forum Bitcoin, des membres s'enflamment&nbsp;: WikiLeaks n'a qu'à utiliser Bitcoin&nbsp;! <i>«&nbsp;Bring it on&nbsp;»</i>, qu'ils viennent&nbsp;!</p>
+    </div>
+    <div style="display:grid;gap:14px">
+      <div class="cut" aria-label="Paiements bloqués">
+        <div><b>PayPal</b><span>4 déc.</span></div>
+        <div><b>Mastercard</b><span>6 déc.</span></div>
+        <div><b>Visa</b><span>7 déc.</span></div>
+      </div>
+      <p class="stamp">Dons bloqués</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">5 décembre 2010</p>
+      <h2>Satoshi dit non</h2>
+      <p>Le créateur refuse. Bitcoin est trop jeune&nbsp;: l'attention des gouvernements pourrait le tuer dans l'œuf.</p>
+    </div>
+    <figure class="post" style="margin:0">
+      <div class="h"><span class="av">S</span><div><div class="who">satoshi</div><div>Forum Bitcoin, 5 déc. 2010</div></div></div>
+      <div class="b">
+        <p class="fr">«&nbsp;Non, ne dites pas “qu'ils y viennent”. Le projet doit grandir progressivement, pour que le logiciel se renforce en chemin. Je lance cet appel à WikiLeaks&nbsp;: n'essayez pas d'utiliser Bitcoin. Bitcoin est une petite communauté en version bêta, à ses débuts. Vous n'en tireriez que de la menue monnaie, et l'attention que vous attireriez nous détruirait probablement à ce stade.&nbsp;»</p>
+        <p class="en">“No, don't "bring it on". The project needs to grow gradually so the software can be strengthened along the way. I make this appeal to WikiLeaks not to try to use Bitcoin. Bitcoin is a small beta community in its infancy. You would not stand to get more than pocket change, and the heat you would bring would likely destroy us at this stage.”</p>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">11 décembre 2010</p>
+      <h2>«&nbsp;Le nid de frelons&nbsp;»</h2>
+      <p>Le magazine <i>PC World</i> fait le lien entre WikiLeaks et Bitcoin. Satoshi réagit sur le forum.</p>
+    </div>
+    <figure class="post" style="margin:0">
+      <div class="h"><span class="av">S</span><div><div class="who">satoshi</div><div>Forum Bitcoin, 11 déc. 2010</div></div></div>
+      <div class="b">
+        <p class="fr">«&nbsp;Ça aurait été bien d'avoir cette attention dans n'importe quel autre contexte. WikiLeaks a donné un coup de pied dans le nid de frelons, et l'essaim se dirige vers nous.&nbsp;»</p>
+        <p class="en">“It would have been nice to get this attention in any other context. WikiLeaks has kicked the hornet's nest, and the swarm is headed towards us.”</p>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">12 décembre 2010 → avril 2011</p>
+      <h2>Satoshi disparaît</h2>
+      <p><b>12 décembre 2010</b>&nbsp;: dernier message sur le forum, une simple mise à jour technique. Puis plus rien en public.</p>
+      <p><b>Avril 2011</b>&nbsp;: dans un de ses derniers e-mails à un développeur&nbsp;: «&nbsp;Je suis passé à autre chose. C'est entre de bonnes mains avec Gavin et tout le monde.&nbsp;»</p>
+    </div>
+    <div class="box">
+      <div class="fact"><span class="tag">Fait</span><p>Il part quelques jours après l'épisode WikiLeaks.</p></div>
+      <div class="fact"><span class="tag hyp">Hypothèse</span><p>Il serait parti à cause de WikiLeaks. Satoshi ne l'a jamais dit.</p></div>
+      <div class="fact"><span class="tag hyp">Hypothèse</span><p>Autre déclencheur souvent cité&nbsp;: en avril 2011, Gavin Andresen annonce qu'il va présenter Bitcoin à la CIA.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">Juin 2011</p>
+      <h2>WikiLeaks le fait quand même</h2>
+      <p>Satoshi n'est plus là pour dire non. WikiLeaks ouvre ses dons en bitcoin, et le réseau tient le choc.</p>
+      <p>En 2017, Julian Assange remercie ironiquement le blocus bancaire&nbsp;: il les a poussés vers Bitcoin, avec un gain de <b>plus de 50&nbsp;000&nbsp;%</b>.</p>
+    </div>
+    <div class="verdict">
+      <p class="q">Le créateur avait dit non. Le projet a avancé sans lui.</p>
+      <p class="small">C'est le premier grand moment où Bitcoin échappe à la volonté de son fondateur.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <h2>Satoshi a perdu Bitcoin</h2>
+      <p>Il a confié le code à <b>Gavin Andresen</b> et aux autres développeurs. Sa «&nbsp;clé d'alerte&nbsp;», qui lui permettait d'envoyer un message à tous les utilisateurs, a été supprimée en 2016, puis rendue publique.</p>
+      <p>Ses bitcoins (environ <b>1,1 million</b> selon les estimations) n'ont jamais bougé.</p>
+      <div class="box"><b>Et s'il revenait&nbsp;?</b><p>Il pourrait vendre ses bitcoins ou prendre la parole. Mais pas changer les règles&nbsp;: chaque ordinateur du réseau vérifie lui-même les règles et rejette ce qui ne les respecte pas, quel qu'en soit l'auteur.</p></div>
+    </div>
+    <div>
+      <div class="fig" id="reseau" role="img" aria-label="Un réseau de nœuds : Satoshi n'est qu'un point parmi les autres"></div>
+      <p class="small">Chaque point est un ordinateur qui vérifie les règles (un «&nbsp;nœud&nbsp;»). Il y en a des milliers. Satoshi n'en est qu'un.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">2015 → 2017</p>
+      <h2>La preuve&nbsp;: la guerre des blocs</h2>
+      <p>De grandes entreprises et des mineurs veulent agrandir les blocs pour faire plus de paiements. Les utilisateurs refusent, de peur qu'il faille un gros serveur pour vérifier le réseau.</p>
+      <p><b>Qui a gagné&nbsp;?</b> Les utilisateurs. Ni les mineurs, ni les entreprises, ni Satoshi ne commandent&nbsp;: chacun choisit le logiciel qu'il fait tourner.</p>
+    </div>
+    <div class="tl">
+      <div><b>Mai 2017</b><p>Accord de New York&nbsp;: des dizaines d'entreprises signent pour doubler la taille des blocs (SegWit2x).</p></div>
+      <div><b>1er août 2017</b><p>Les partisans des gros blocs partent créer leur propre monnaie&nbsp;: Bitcoin Cash.</p></div>
+      <div><b>Août 2017</b><p>SegWit, poussé par les utilisateurs (UASF), est activé sur Bitcoin.</p></div>
+      <div><b>8 nov. 2017</b><p>Le doublement SegWit2x est annulé, faute de soutien.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <p class="when">Depuis</p>
+      <h2>Les faux Satoshi</h2>
+      <p>Craig Wright a affirmé pendant des années être Satoshi. En 2024, la Haute Cour de Londres a jugé qu'il ne l'est pas, et qu'il avait fabriqué des preuves.</p>
+      <p>Le vrai Satoshi pourrait le prouver en une seconde&nbsp;: signer un message avec les clés de ses premiers bitcoins. Personne ne l'a jamais fait.</p>
+    </div>
+    <div class="verdict">
+      <p class="small">Haute Cour de Londres, 2024</p>
+      <p class="q">«&nbsp;Le Dr Wright n'est pas l'auteur du livre blanc de Bitcoin.&nbsp;»</p>
+      <p class="small">Leçon pour un débutant&nbsp;: quelqu'un qui dit «&nbsp;je suis Satoshi&nbsp;» ou qui parle en son nom sans preuve cryptographique ment.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="satoshi">
+  <div class="in two">
+    <div class="txt">
+      <h2>De A à B, en une phrase</h2>
+      <p class="lead">Bitcoin est passé du projet d'une personne à des règles que personne ne contrôle, pas même son créateur.</p>
+    </div>
+    <div class="tl">
+      <div><b>2008</b><p>Satoshi écrit Bitcoin.</p></div>
+      <div><b>2010</b><p>Il le dirige, corrige les bugs, dit non à WikiLeaks.</p></div>
+      <div><b>2011</b><p>Il part. WikiLeaks accepte quand même le bitcoin.</p></div>
+      <div><b>2017</b><p>Les utilisateurs l'emportent face aux entreprises et aux mineurs.</p></div>
+      <div><b>Aujourd'hui</b><p>Même Satoshi ne pourrait pas reprendre la main.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPITRE 2 ============ -->
+<section class="slide cover" data-ch="trilemme" aria-label="Chapitre 2">
+  <div class="in two">
+    <div class="txt">
+      <p class="num">2</p>
+      <h2>La limite&nbsp;: le trilemme de la blockchain</h2>
+    </div>
+    <p class="lead">Toute technologie a une limite physique. Une voiture ne peut pas être à la fois la plus rapide, la plus sûre et la moins chère. Une blockchain non plus.</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="trilemme">
+  <div class="in two">
+    <div class="txt">
+      <h2>Rapide, bon, pas cher&nbsp;: choisis-en deux</h2>
+      <p>En cuisine, tout le monde connaît la règle. Un plat rapide et pas cher ne sera pas le meilleur. Un plat excellent et rapide coûtera cher.</p>
+      <p>Une blockchain a le même problème avec trois qualités. Elle peut en avoir deux pleinement&nbsp;; la troisième en souffre. Le terme a été popularisé par Vitalik Buterin, le créateur d'Ethereum.</p>
+      <p class="small">Pas besoin de retenir les trois mots. Retiens seulement qu'il y a une limite, comme partout.</p>
+    </div>
+    <div class="box" style="gap:12px">
+      <div class="fact"><span class="tag">1</span><p><b>Décentralisé</b>&nbsp;: personne ne commande, n'importe qui peut vérifier.</p></div>
+      <div class="fact"><span class="tag">2</span><p><b>Sûr</b>&nbsp;: impossible de tricher ou de dépenser deux fois.</p></div>
+      <div class="fact"><span class="tag">3</span><p><b>Rapide</b>&nbsp;: beaucoup de paiements par seconde.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="trilemme">
+  <div class="in two trig">
+    <div class="txt" style="grid-area:t">
+      <h2>À toi de choisir deux sommets</h2>
+      <p>Touche un sommet&nbsp;: il remplace le plus ancien des deux choisis.</p>
+    </div>
+    <div class="res" id="res" aria-live="polite" style="grid-area:r"></div>
+    <div class="fig" id="tri" style="grid-area:f">
+      <svg id="trisvg" aria-hidden="true"></svg>
+      <button type="button" class="corner" data-k="D" aria-pressed="false"><b>Décentralisé</b><span>personne ne commande</span></button>
+      <button type="button" class="corner" data-k="S" aria-pressed="false"><b>Sûr</b><span>impossible de tricher</span></button>
+      <button type="button" class="corner" data-k="C" aria-pressed="false"><b>Rapide</b><span>beaucoup de paiements</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="trilemme">
+  <div class="in two">
+    <div class="txt">
+      <h2>Et si on faisait des blocs plus gros&nbsp;?</h2>
+      <p>C'était tout le débat de la guerre des blocs. Plus de paiements, oui&nbsp;; mais il faut une machine plus grosse pour vérifier, donc moins de monde peut le faire.</p>
+      <div class="slider">
+        <label for="taille"><span>Taille des blocs</span><output id="tOut">×1</output></label>
+        <input type="range" id="taille" min="0" max="5" step="1" value="0">
+        <div class="ticks" aria-hidden="true"><span>×1 (aujourd'hui)</span><span>×1&nbsp;500</span></div>
+      </div>
+      <p class="small">Modèle simplifié. Base&nbsp;: un bloc moyen de 1,5&nbsp;Mo toutes les 10 minutes, environ 3&nbsp;200 transactions par bloc (ordre de grandeur 2025).</p>
+    </div>
+    <div style="display:grid;gap:12px">
+      <div class="kpis">
+        <div class="kpi"><b id="kTx">5</b><span>transactions par seconde</span></div>
+        <div class="kpi"><b id="kDay">216 Mo</b><span>à télécharger par jour</span></div>
+        <div class="kpi"><b id="kYear">79 Go</b><span>de données en plus par an</span></div>
+      </div>
+      <div class="box">
+        <span class="small">Pour vérifier soi-même, il faut&nbsp;:</span>
+        <p class="who" id="kMach">Un PC ordinaire</p>
+        <p id="kWho">Presque tout le monde peut vérifier.</p>
+      </div>
+      <div class="meter"><span>Rapide</span><i id="mFast"></i><span>Décentralisé</span><i id="mDec" style="--c:var(--ink)"></i></div>
+      <p class="small">Repère&nbsp;: Visa a traité 257,5 milliards de transactions sur son exercice 2025, soit environ <b>8&nbsp;000 par seconde</b> en moyenne.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="trilemme">
+  <div class="in two">
+    <div class="txt">
+      <h2>La solution de Bitcoin&nbsp;: des étages</h2>
+      <p>Bitcoin garde une base lente mais solide, que tout le monde peut vérifier. La vitesse se fait <b>au-dessus</b>, avec le réseau <b>Lightning</b>.</p>
+      <p>C'est comme l'ardoise au bar&nbsp;: on note chaque consommation, et on ne passe en caisse qu'une fois à la fin. Sur Lightning, les paiements sont instantanés et coûtent quelques centimes ou moins&nbsp;; seuls l'ouverture et le règlement final passent par la chaîne Bitcoin.</p>
+      <div class="box"><b>À retenir</b><p>Il n'y a pas de technologie magique. Bitcoin a choisi&nbsp;: lent à la base, mais sans chef.</p></div>
+    </div>
+    <div class="slate" aria-label="Exemple d'ardoise">
+      <div><span>Café</span><span>2,00 €</span></div>
+      <div><span>Café</span><span>2,00 €</span></div>
+      <div><span>Croissant</span><span>1,50 €</span></div>
+      <div><span>Café</span><span>2,00 €</span></div>
+      <div><span>Jus d'orange</span><span>3,50 €</span></div>
+      <div class="tot"><span>Réglé en une fois</span><span>11,00 €</span></div>
+      <p style="font-size:14px;color:#c9cdc6;margin-top:6px">5 paiements sur Lightning, 1 seul passage par la chaîne.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPITRE 3 ============ -->
+<section class="slide cover" data-ch="acheter" aria-label="Chapitre 3">
+  <div class="in two">
+    <div class="txt">
+      <p class="num">3</p>
+      <h2>Acheter&nbsp;: du vrai bitcoin… ou pas&nbsp;?</h2>
+    </div>
+    <p class="lead">Revolut, Trade Republic, Bitstack, Kraken&nbsp;: quatre styles de plateformes. La vraie question n'est pas seulement le prix, c'est&nbsp;: <b>qui a les clés&nbsp;?</b></p>
+  </div>
+</section>
+
+<section class="slide" data-ch="acheter">
+  <div class="in two">
+    <div class="txt">
+      <h2>Du vrai bitcoin, ou une promesse&nbsp;?</h2>
+      <p>Quand tu achètes sur une plateforme, elle garde les bitcoins pour toi. Tu as une ligne dans son tableau, comme un solde à la banque.</p>
+      <p>Pour qu'ils soient vraiment à toi, il faut les <b>retirer vers ton propre portefeuille</b>. C'est alors toi qui as les clés, sous la forme d'une liste de 12 ou 24 mots.</p>
+      <p class="small">Le dicton des bitcoiners&nbsp;: «&nbsp;Not your keys, not your coins&nbsp;» (pas tes clés, pas tes bitcoins).</p>
+    </div>
+    <div class="tl ladder">
+      <div><b>Niveau 1 · Exposition</b><p>Un produit financier qui suit le prix (ETP, CFD…). Tu n'as aucun bitcoin&nbsp;: tu ne peux pas en envoyer ni en retirer.</p></div>
+      <div><b>Niveau 2 · Gardé par la plateforme</b><p>Le bitcoin existe, mais c'est elle qui a les clés. Si elle bloque les retraits ou fait faillite, tu attends. Exemple&nbsp;: FTX, novembre 2022.</p></div>
+      <div><b>Niveau 3 · Dans ton portefeuille</b><p>Tu as les clés&nbsp;: personne ne peut bloquer ton argent. Mais si tu perds tes 12 mots, personne ne peut t'aider.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATEFORMES -->
+
+
+</main>
+
+<nav class="bot" aria-label="Navigation">
+  <button type="button" id="prev">← Retour</button>
+  <span id="count" aria-live="polite">1 / 1</span>
+  <button type="button" id="next">Suivant →</button>
+</nav>
+
+<script>
+{
+const deck = document.getElementById('deck');
+const slides = [...deck.querySelectorAll('.slide')];
+const N = slides.length;
+const chain = document.getElementById('chain');
+const count = document.getElementById('count');
+const prev = document.getElementById('prev');
+const next = document.getElementById('next');
+const tabs = [...document.querySelectorAll('#tabs button')];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+chain.style.gridTemplateColumns = `repeat(${N},minmax(0,1fr))`;
+chain.innerHTML = slides.map((s, i) => `<button type="button" data-i="${i}" aria-label="Diapo ${i + 1} sur ${N}"></button>`).join('');
+const blocks = [...chain.children];
+const firstOf = (ch) => Math.max(0, slides.findIndex((s) => s.dataset.ch === ch));
+let cur = -1;
+
+function go(i, instant) {
+  i = Math.max(0, Math.min(N - 1, i));
+  deck.scrollTo({ left: i * deck.clientWidth, behavior: instant || reduce ? 'auto' : 'smooth' });
+  set(i);
+}
+function set(i) {
+  if (i === cur) return;
+  cur = i;
+  blocks.forEach((b, j) => {
+    b.classList.toggle('done', j < i);
+    b.classList.toggle('now', j === i);
+    if (j === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+  });
+  count.textContent = `${i + 1} / ${N}`;
+  prev.disabled = i === 0;
+  next.disabled = i === N - 1;
+  const ch = slides[i].dataset.ch;
+  tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.ch === ch)));
+  if (location.hash.slice(1) !== ch) { try { history.replaceState(null, '', '#' + ch); } catch (e) { /* ignoré */ } }
+}
+let raf = 0;
+deck.addEventListener('scroll', () => {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => {
+    const i = Math.round(deck.scrollLeft / deck.clientWidth);
+    if (Math.abs(deck.scrollLeft - i * deck.clientWidth) < 4) set(i);
+  });
+}, { passive: true });
+prev.addEventListener('click', () => go(cur - 1));
+next.addEventListener('click', () => go(cur + 1));
+chain.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) go(+b.dataset.i); });
+tabs.forEach((t) => t.addEventListener('click', () => go(firstOf(t.dataset.ch))));
+document.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => go(firstOf(b.dataset.go))));
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input,textarea,select') || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(cur + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(cur - 1); }
+  else if (e.key === 'Home') { e.preventDefault(); go(0); }
+  else if (e.key === 'End') { e.preventDefault(); go(N - 1); }
+});
+const keep = new ResizeObserver(() => { if (cur >= 0) deck.scrollLeft = cur * deck.clientWidth; });
+keep.observe(deck);
+addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h && h !== slides[cur].dataset.ch) go(firstOf(h), true); });
+const start = firstOf(location.hash.slice(1) || 'intro');
+set(start);
+requestAnimationFrame(() => { deck.scrollLeft = start * deck.clientWidth; });
+
+/* Réseau de nœuds : Satoshi n'est qu'un point */
+const net = document.getElementById('reseau');
+function drawNet() {
+  const W = net.clientWidth, H = net.clientHeight;
+  if (!W || !H) return;
+  let seed = 7;
+  const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const named = [
+    { x: .30, y: .36, t: 'Satoshi' }, { x: .70, y: .66, t: 'toi' },
+    { x: .16, y: .80, t: 'un mineur' }, { x: .66, y: .18, t: 'une entreprise' }
+  ].map((n) => ({ ...n, x: n.x * W, y: n.y * H }));
+  const pts = named.slice();
+  let guard = 0;
+  while (pts.length < 52 && guard++ < 4000) {
+    const p = { x: 12 + rnd() * (W - 24), y: 12 + rnd() * (H - 24) };
+    const clash = pts.some((q) => (q.x - p.x) ** 2 + (q.y - p.y) ** 2 < 26 ** 2) ||
+      named.some((n) => p.x > n.x - 12 && p.x < n.x + n.t.length * 9 + 22 && p.y > n.y - 16 && p.y < n.y + 14);
+    if (!clash) pts.push(p);
+  }
+  const edges = new Set();
+  pts.forEach((p, i) => {
+    pts.map((q, j) => [j, (q.x - p.x) ** 2 + (q.y - p.y) ** 2]).filter((d) => d[0] !== i)
+      .sort((a, b) => a[1] - b[1]).slice(0, 3).forEach((d) => edges.add(Math.min(i, d[0]) + '-' + Math.max(i, d[0])));
+  });
+  const lines = [...edges].map((e) => { const [a, b] = e.split('-').map(Number); return `<line x1="${pts[a].x}" y1="${pts[a].y}" x2="${pts[b].x}" y2="${pts[b].y}"/>`; }).join('');
+  const dots = pts.map((p, i) => `<circle cx="${p.x}" cy="${p.y}" r="7" fill="${i === 0 ? 'var(--or)' : 'var(--ink)'}"/>`).join('');
+  const labels = named.map((n) => `<text x="${n.x + 12}" y="${n.y + 5}" font-size="15" font-weight="700" fill="var(--ink)">${n.t}</text>`).join('');
+  net.innerHTML = `<svg viewBox="0 0 ${W} ${H}"><g stroke="var(--line)" stroke-width="2">${lines}</g>${dots}${labels}</svg>`;
+}
+const netObs = new ResizeObserver(drawNet);
+netObs.observe(net);
+
+/* Trilemme : deux sommets sur trois */
+const tri = document.getElementById('tri');
+const svg = document.getElementById('trisvg');
+const res = document.getElementById('res');
+const corners = [...tri.querySelectorAll('.corner')];
+const NAMES = { D: 'Décentralisé', S: 'Sûr', C: 'Rapide' };
+const COMBOS = {
+  DS: { short: 'Bitcoin', title: 'Décentralisé + sûr = Bitcoin', text: 'Des milliers d’ordinateurs vérifient tout, personne ne peut bloquer un paiement. Le prix à payer : environ 5 transactions par seconde sur la chaîne principale, un bloc toutes les 10 minutes environ.' },
+  CS: { short: 'Visa, banques', title: 'Sûr + rapide = Visa, une banque', text: 'Visa traite environ 8 000 transactions par seconde en moyenne. Mais une entreprise commande : elle peut bloquer qui elle veut. C’est exactement ce qui est arrivé à WikiLeaks en 2010.' },
+  CD: { short: 'Chaîne fragile', title: 'Décentralisé + rapide = une chaîne fragile', text: 'Ouverte et rapide, mais peu protégée : l’attaquer coûte peu. Exemple réel : en août 2020, Ethereum Classic a subi plusieurs attaques « à 51 % » ; des millions de dollars ont été dépensés deux fois.' }
+};
+let sel = ['D', 'S'];
+const keyOf = () => ['D', 'S', 'C'].filter((k) => sel.includes(k)).join('').replace('DC', 'CD').replace('SC', 'CS');
+function placeCorners() {
+  const W = tri.clientWidth, H = tri.clientHeight;
+  const bw = Math.min(122, W / 2 - 8);
+  corners.forEach((c) => { c.style.width = bw + 'px'; });
+  const pos = { D: [W / 2, 34], S: [bw / 2 + 2, H - 34], C: [W - bw / 2 - 2, H - 34] };
+  corners.forEach((c) => { const p = pos[c.dataset.k]; c.style.left = p[0] + 'px'; c.style.top = p[1] + 'px'; });
+  return pos;
+}
+function drawTri() {
+  const W = tri.clientWidth, H = tri.clientHeight;
+  if (!W || !H) return;
+  const pos = placeCorners();
+  const k = keyOf();
+  const pairs = [['D', 'S'], ['S', 'C'], ['C', 'D']];
+  const edges = pairs.map(([a, b]) => {
+    const on = sel.includes(a) && sel.includes(b);
+    return `<line x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}" stroke="${on ? 'var(--or)' : 'var(--line)'}" stroke-width="${on ? 10 : 3}" stroke-linecap="round" ${on ? '' : 'stroke-dasharray="6 8"'}/>`;
+  }).join('');
+  const cx = (pos.D[0] + pos.S[0] + pos.C[0]) / 3, cy = (pos.D[1] + pos.S[1] + pos.C[1]) / 3 + 10;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = edges + `<text x="${cx}" y="${cy}" text-anchor="middle" font-size="19" font-weight="700" font-family="Ubuntu, Inter, sans-serif" fill="var(--ink)">${COMBOS[k].short}</text>`;
+}
+function renderTri() {
+  const k = keyOf();
+  const lost = ['D', 'S', 'C'].find((x) => !sel.includes(x));
+  corners.forEach((c) => { const on = sel.includes(c.dataset.k); c.setAttribute('aria-pressed', String(on)); c.classList.toggle('lost', !on); });
+  res.innerHTML = `<h3>${COMBOS[k].title}</h3><p class="lost-l">Sacrifié : ${NAMES[lost].toLowerCase()}</p><p>${COMBOS[k].text}</p>`;
+  drawTri();
+}
+corners.forEach((c) => c.addEventListener('click', () => { const k = c.dataset.k; if (!sel.includes(k)) { sel = [sel[1], k]; renderTri(); } }));
+const triObs = new ResizeObserver(drawTri);
+triObs.observe(tri);
+renderTri();
+
+/* Taille des blocs */
+const range = document.getElementById('taille');
+const MULT = [1, 4, 16, 64, 256, 1500];
+const MACH = [
+  ['Un PC ordinaire ou un mini-PC', 'Presque tout le monde peut vérifier.'],
+  ['Un bon PC avec un gros disque', 'Beaucoup de monde peut encore vérifier.'],
+  ['Un PC costaud, plusieurs disques, une bonne fibre', 'Surtout des passionnés bien équipés.'],
+  ['Un serveur et des dizaines de To de disque', 'Surtout des professionnels.'],
+  ['Une baie de serveurs', 'Des entreprises. Les particuliers doivent leur faire confiance.'],
+  ['Un datacenter', 'Quelques géants vérifient pour tout le monde : on a recréé des chefs.']
+];
+const nf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 });
+const size = (mo) => mo >= 1e6 ? nf.format(mo / 1e6) + ' To' : mo >= 1000 ? nf.format(mo / 1000) + ' Go' : nf.format(mo < 10 ? mo : Math.round(mo)) + ' Mo';
+function renderSize() {
+  const i = +range.value, k = MULT[i];
+  range.style.setProperty('--pct', (i / (MULT.length - 1) * 100) + '%');
+  document.getElementById('tOut').textContent = '×' + nf.format(k) + ' · ' + size(1.5 * k) + ' par bloc';
+  document.getElementById('kTx').textContent = nf.format(Math.round(5.4 * k));
+  document.getElementById('kDay').textContent = size(1.5 * 144 * k);
+  document.getElementById('kYear').textContent = size(1.5 * 52560 * k);
+  document.getElementById('kMach').textContent = MACH[i][0];
+  document.getElementById('kWho').textContent = MACH[i][1];
+  const f = Math.log(k) / Math.log(1500);
+  document.getElementById('mFast').style.setProperty('--w', Math.round(8 + f * 92) + '%');
+  document.getElementById('mDec').style.setProperty('--w', Math.round(100 - f * 92) + '%');
+}
+range.addEventListener('input', renderSize);
+renderSize();
+}
+</script>
+</body>
+</html>
