@@ -44,9 +44,9 @@ button{font:inherit;color:inherit}
 #deck::-webkit-scrollbar{display:none}
 .slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overscroll-behavior-y:contain;padding:clamp(20px,4vw,48px) max(5vw,16px,env(safe-area-inset-right)) 28px max(5vw,16px,env(safe-area-inset-left))}
 .in{max-width:1000px;margin:0 auto;min-height:100%;display:grid;align-content:center;gap:22px}
-.trig{grid-template-areas:"t" "f" "r";gap:12px}
+.trig{grid-template-areas:"t" "c" "f" "r";gap:12px}
 #tri{min-height:240px}
-@media (min-width:880px){.trig{grid-template-areas:"t f" "r f"}#tri{min-height:320px}}
+@media (min-width:880px){.trig{grid-template-areas:"t f" "c f" "r f"}#tri{min-height:340px}}
 @media (min-width:880px){.in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;column-gap:56px}}
 .txt{display:grid;gap:14px}
 .when{font-family:Ubuntu,sans-serif;font-weight:700;font-size:20px;color:var(--or-ink)}
@@ -87,9 +87,6 @@ h2{font-size:clamp(32px,8vw,50px)}
 .fig{position:relative;min-height:280px}
 .fig>svg{position:absolute;inset:0;width:100%;height:100%}
 svg text{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
-#tri .corner{position:absolute;z-index:1;transform:translate(-50%,-50%);width:118px;min-height:48px;border-radius:14px;border:2px solid var(--ink);background:var(--bg);cursor:pointer;padding:8px;font-family:Ubuntu,sans-serif;font-weight:700;font-size:17px}
-#tri .corner[aria-pressed=true]{background:var(--or);border-color:var(--or);color:#17140f}
-#tri .corner[aria-pressed=false]{border-style:dashed;color:var(--muted)}
 .res{background:var(--panel);border-radius:14px;padding:14px 16px;display:grid;gap:4px;min-height:118px}
 .res b{font-family:Ubuntu,sans-serif;font-size:21px}
 .keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -115,6 +112,36 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 #next{justify-self:end;min-width:9em;background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .bot button:disabled{opacity:.35;cursor:default}
 #count{font-family:Ubuntu,sans-serif;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bank{display:grid;gap:10px}
+.bank>div{border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.bank .old{border:2px solid var(--ink)}
+.bank .new{background:var(--or);color:#17140f}
+.bank b{font-family:Ubuntu,sans-serif;font-size:20px;line-height:1.15}
+.bank p{font-size:16px;line-height:1.4}
+.route{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;flex-wrap:nowrap}
+.route span{border:1.5px solid currentColor;border-radius:8px;padding:4px 7px;white-space:nowrap}
+.route i{flex:1 1 auto;min-width:10px;height:2px;background:currentColor;position:relative}
+.route i::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid currentColor;border-right:0}
+.route .mid{border-style:dashed}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1.5px solid var(--ink);background:var(--bg);border-radius:999px;padding:8px 13px;font-weight:700;font-size:15px;cursor:pointer;min-height:42px}
+.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.ax{position:absolute;transform:translateX(-50%);text-align:center;line-height:1.15;width:124px;pointer-events:none}
+.ax b{display:block;font-family:Ubuntu,sans-serif;font-size:15px}
+.ax span{font-size:13px;color:var(--muted)}
+.chart{min-height:260px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:14px;font-weight:600}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.queue{display:grid;gap:10px}
+.queue>div{border-radius:14px;padding:12px 14px;display:grid;gap:6px}
+.queue .ipo,.queue .eth{border:2px solid var(--ink)}
+.queue .btc{background:var(--or);color:#17140f}
+.queue b{font-family:Ubuntu,sans-serif;font-size:18px}
+.queue ol{margin:0;padding-left:1.3em;font-size:15px;line-height:1.4}
+.queue ol li:last-child{font-weight:700}
+.queue p{font-size:15px;line-height:1.4}
+@media (min-width:880px){.chart{min-height:360px}}
 @media (max-width:600px){
 .slide{padding-top:16px;padding-bottom:16px}
 .in{gap:16px}
@@ -135,8 +162,7 @@ h2{font-size:29px}
 .post .b{padding:12px 14px}
 .tl div{padding-bottom:12px}
 #reseau{min-height:200px}
-#tri{min-height:190px}
-.hint{display:none}
+#tri{min-height:200px}
 .res{min-height:0;padding:10px 14px}
 .res b{font-size:18px}
 .res p{font-size:15px;line-height:1.4}
@@ -147,6 +173,19 @@ h2{font-size:29px}
 .ways span,.ways em{font-size:15px}
 .end i{width:38px;height:38px;font-size:20px}
 }
+@media (max-width:600px){
+.bank>div,.queue>div{padding:10px 12px;gap:4px}
+.queue>div{padding:8px 12px;gap:2px}
+.queue{gap:7px}
+.bank b,.queue b{font-size:17px}
+.bank p,.queue p{font-size:15px;line-height:1.35}
+.chips button{padding:6px 10px;font-size:14px;min-height:40px}
+.chips{gap:5px}
+.chart{min-height:220px}
+#tri{min-height:190px}
+.res{padding:10px 12px}
+.parts button{padding:11px 14px}
+}
 @media (max-width:600px) and (max-height:600px){
 h2{font-size:25px}
 .big,.post .b{font-size:16px}
@@ -156,6 +195,7 @@ h2{font-size:25px}
 #tri{min-height:170px}
 .paper{box-shadow:none}
 }
+@media (max-width:480px){.brand>span:last-child{display:none}}
 @media (max-width:420px){.brand .full{display:none}#tabs button{padding:8px 10px;font-size:14px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -168,6 +208,7 @@ h2{font-size:25px}
       <button type="button" data-ch="histoire" aria-selected="false">Histoire</button>
       <button type="button" data-ch="limite" aria-selected="false">Limite</button>
       <button type="button" data-ch="acheter" aria-selected="false">Acheter</button>
+      <button type="button" data-ch="prix" aria-selected="false">Prix</button>
     </nav>
   </div>
   <div id="chain" aria-label="Progression : chaque bloc est une diapo"></div>
@@ -179,13 +220,14 @@ h2{font-size:25px}
   <div class="in">
     <div class="txt">
       <h1>Bitcoin, l'essentiel</h1>
-      <p class="big">Qui l'a créé, pourquoi personne ne peut l'arrêter, et comment en acheter.</p>
+      <p class="big">Qui l'a créé, pourquoi personne ne peut l'arrêter, comment en acheter, et ce qu'a fait son prix.</p>
       <p class="small">Glisse vers la gauche pour avancer.</p>
     </div>
     <div class="parts">
       <button type="button" data-go="histoire"><span class="n">1</span>L'histoire</button>
       <button type="button" data-go="limite"><span class="n">2</span>La limite</button>
       <button type="button" data-go="acheter"><span class="n">3</span>Acheter</button>
+      <button type="button" data-go="prix"><span class="n">4</span>Le prix</button>
     </div>
   </div>
 </section>
@@ -216,6 +258,27 @@ h2{font-size:25px}
       <div><i>1</i><b>Sans chef</b><span>Des milliers d'ordinateurs tiennent le même registre. Pas de banque au milieu.</span></div>
       <div><i>2</i><b>Incensurable</b><span>Personne ne peut bloquer ton paiement ni geler ton compte.</span></div>
       <div><i>3</i><b>Limité</b><span>21 millions de bitcoins au maximum. Personne ne peut en imprimer plus.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="histoire">
+  <div class="in">
+    <div class="txt">
+      <h2>L'euro en banque ou le bitcoin&nbsp;?</h2>
+      <p class="big">Ton argent en banque, c'est de la <b>monnaie scripturale</b>&nbsp;: une ligne écrite dans le registre de ta banque.</p>
+    </div>
+    <div class="bank">
+      <div class="old">
+        <b>L'euro en banque</b>
+        <p>Chaque banque tient <b>son propre registre</b>. Pour payer ailleurs&nbsp;: des intermédiaires (Visa, Mastercard…), qui peuvent bloquer.</p>
+        <div class="route" aria-label="Banque A, puis Visa ou Mastercard, puis banque B"><span>Banque A</span><i></i><span class="mid">Visa · Mastercard</span><i></i><span>Banque B</span></div>
+      </div>
+      <div class="new">
+        <b>Le bitcoin</b>
+        <p><b>Un seul registre pour toute la monnaie</b>, copié par des milliers d'ordinateurs. Son propre protocole envoie de A à B, sans intermédiaire.</p>
+        <div class="route" aria-label="De toi directement au destinataire"><span>Toi</span><i></i><span>Le destinataire</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -281,16 +344,23 @@ h2{font-size:25px}
 <section class="slide" data-ch="limite">
   <div class="in trig">
     <div class="txt" style="grid-area:t">
-      <h2>Rapide, sûr, sans chef&nbsp;: choisis-en deux</h2>
-      <p class="big">Comme en cuisine avec «&nbsp;rapide, bon, pas cher&nbsp;»&nbsp;: on ne peut pas tout avoir. C'est le <b>trilemme</b>.</p>
+      <h2>Le trilemme&nbsp;: un dosage</h2>
+      <p class="big"><b>Décentralisation</b>, <b>sécurité</b>, <b>scalabilité</b>&nbsp;: comme «&nbsp;rapide, bon, pas cher&nbsp;», jamais les trois à fond.</p>
+    </div>
+    <div class="chips" id="chips" style="grid-area:c" role="group" aria-label="Comparer">
+      <button type="button" data-p="btc" aria-pressed="true">Bitcoin</button>
+      <button type="button" data-p="ln" aria-pressed="false">+ Lightning</button>
+      <button type="button" data-p="visa" aria-pressed="false">Visa</button>
+      <button type="button" data-p="frag" aria-pressed="false">Fragile</button>
+    </div>
+    <div class="fig" id="tri" style="grid-area:f" role="img" aria-label="Triangle des trois qualités, rempli selon le choix">
+      <svg id="trisvg" aria-hidden="true"></svg>
+      <div class="ax" data-k="D"><b>Décentralisation</b><span>sans chef</span></div>
+      <div class="ax" data-k="S"><b>Sécurité</b><span>impossible de tricher</span></div>
+      <div class="ax" data-k="C"><b>Scalabilité</b><span>rapide</span></div>
+      <p class="small" style="position:absolute;right:0;top:0;margin:0;max-width:7.5em;text-align:right;line-height:1.25">Notes indicatives, pas des mesures</p>
     </div>
     <div class="res" id="res" aria-live="polite" style="grid-area:r"></div>
-    <div class="fig" id="tri" style="grid-area:f">
-      <svg id="trisvg" aria-hidden="true"></svg>
-      <button type="button" class="corner" data-k="D" aria-pressed="false">Sans chef</button>
-      <button type="button" class="corner" data-k="S" aria-pressed="false">Sûr</button>
-      <button type="button" class="corner" data-k="C" aria-pressed="false">Rapide</button>
-    </div>
   </div>
 </section>
 
@@ -324,7 +394,51 @@ h2{font-size:25px}
   </div>
 </section>
 
-<section class="slide cover" data-ch="acheter">
+<section class="slide" data-ch="prix">
+  <div class="in">
+    <div class="txt">
+      <p class="when">2010 → 2026</p>
+      <h2>Le prix du bitcoin</h2>
+      <p class="big">Échelle logarithmique&nbsp;: chaque ligne, c'est ×100. Des hausses énormes, puis des chutes de −77 à −93&nbsp;%.</p>
+    </div>
+    <div style="display:grid;gap:8px">
+      <div class="fig chart" id="chBtc" role="img" aria-label="Prix du bitcoin en échelle logarithmique, de 2010 à 2026, avec les hausses et les baisses de chaque cycle"></div>
+      <div class="legend"><span><i style="background:var(--or)"></i>Hausse (bull run)</span><span><i style="background:color-mix(in srgb,var(--no) 22%,transparent)"></i>Baisse (bear market)</span></div>
+      <p class="small">Aujourd'hui ≈&nbsp;60&nbsp;700&nbsp;$ (26 nov. 2026). Données Coin Metrics, puis presse après mai 2026 (pointillés).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="prix">
+  <div class="in">
+    <div class="txt">
+      <p class="when">2015 → 2026</p>
+      <h2>Et Ethereum&nbsp;?</h2>
+      <p class="big">Mêmes montagnes russes, en plus violent. Et son sommet de 2025 dépasse à peine celui de 2021.</p>
+    </div>
+    <div style="display:grid;gap:8px">
+      <div class="fig chart" id="chEth" role="img" aria-label="Prix d'Ethereum en échelle logarithmique, de 2015 à 2026, avec les hausses et les baisses de chaque cycle"></div>
+      <div class="legend"><span><i style="background:var(--or)"></i>Hausse (bull run)</span><span><i style="background:color-mix(in srgb,var(--no) 22%,transparent)"></i>Baisse (bear market)</span></div>
+      <p class="small">Aujourd'hui&nbsp;: ≈&nbsp;1&nbsp;700&nbsp;$ (26 nov. 2026). Mêmes sources.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="prix">
+  <div class="in">
+    <div class="txt">
+      <h2>Personne n'est passé avant toi</h2>
+      <p class="big">Pas d'entrée en bourse, pas de prévente, aucune part réservée&nbsp;: tout le monde est parti en même temps.</p>
+    </div>
+    <div class="queue">
+      <div class="ipo"><b>Une entrée en bourse (IPO)</b><p>Fondateurs, fonds privés, invités… et <b>toi en dernier</b>, plus cher.</p></div>
+      <div class="eth"><b>Ethereum, 2014</b><p>Prévente à ≈&nbsp;0,31&nbsp;$ avant le lancement, et ≈&nbsp;12 millions d'ETH gardés par l'équipe.</p></div>
+      <div class="btc"><b>Bitcoin, 2009</b><p>Mêmes règles pour tous dès le premier jour. Les premiers mineurs (Satoshi compris) en ont eu beaucoup, mais quand ça ne valait rien.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide cover" data-ch="fin">
   <div class="in">
     <div class="txt">
       <h2>À retenir</h2>
@@ -332,7 +446,8 @@ h2{font-size:25px}
     <div style="display:grid;gap:16px">
       <div class="end"><i>1</i><p class="big"><b>Satoshi a créé Bitcoin</b>, puis il est parti. Bitcoin n'a plus de chef.</p></div>
       <div class="end"><i>2</i><p class="big"><b>Quand les banques te bannissent</b>, Bitcoin reste ouvert. WikiLeaks l'a prouvé.</p></div>
-      <div class="end"><i>3</i><p class="big"><b>Toute technologie a une limite.</b> Bitcoin a choisi d'être lent mais sans chef.</p></div>
+      <div class="end"><i>3</i><p class="big"><b>Toute technologie a une limite.</b> Bitcoin a choisi d'être lent à la base, mais sans chef.</p></div>
+      <div class="end"><i>4</i><p class="big"><b>Personne n'est passé avant toi.</b> Mêmes règles pour tous, depuis le premier jour.</p></div>
       <details>
         <summary>Sources</summary>
         <ul class="src">
@@ -341,6 +456,8 @@ h2{font-size:25px}
           <li><a href="https://satoshi.nakamotoinstitute.org/posts/bitcointalk/543/">Son dernier message sur le forum (12 déc. 2010)</a></li>
           <li><a href="https://www.coindesk.com/assange-bitcoin-wikileaks-helped-keep-alive">WikiLeaks accepte le bitcoin (2011)</a></li>
           <li><a href="https://vitalik.eth.limo/general/2017/12/31/sharding_faq.html">Le trilemme, par Vitalik Buterin (2017)</a> et <a href="https://annualreport.visa.com/financials">Visa, rapport 2025</a></li>
+          <li><a href="https://github.com/coinmetrics/data">Prix&nbsp;: Coin Metrics, données publiques</a> et <a href="https://www.theblock.co/news/markets/2026-11-25-bitcoin-falls-below-58000-coinshares-butterfill-sees-tail-end-bear-market-446678">presse de novembre 2026</a></li>
+          <li><a href="https://blog.ethereum.org/2014/07/22/launching-the-ether-sale">La prévente d'Ethereum (2014)</a></li>
           <li>Frais&nbsp;: <a href="https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/">Revolut</a>, <a href="https://support.traderepublic.com/fr-fr/1461-Quels-sont-les-frais-de-courtage-des-crypto_monnaies-">Trade Republic</a>, <a href="https://www.bitstack-app.com/en-FR/pricing">Bitstack</a>, <a href="https://www.kraken.com/features/fee-schedule">Kraken</a></li>
         </ul>
       </details>
@@ -373,8 +490,10 @@ const blocks = [...chain.children];
 const firstOf = (ch) => Math.max(0, slides.findIndex((s) => s.dataset.ch === ch));
 let cur = -1;
 
+let target = -1, tTimer = 0;
 function go(i, instant) {
   i = Math.max(0, Math.min(N - 1, i));
+  target = i; clearTimeout(tTimer); tTimer = setTimeout(() => { target = -1; }, 1200);
   deck.scrollTo({ left: i * deck.clientWidth, behavior: instant || reduce ? 'auto' : 'smooth' });
   set(i);
 }
@@ -397,6 +516,7 @@ let raf = 0;
 deck.addEventListener('scroll', () => {
   cancelAnimationFrame(raf);
   raf = requestAnimationFrame(() => {
+    if (target >= 0) { if (Math.abs(deck.scrollLeft - target * deck.clientWidth) < 4) target = -1; else return; }
     const i = Math.round(deck.scrollLeft / deck.clientWidth);
     if (Math.abs(deck.scrollLeft - i * deck.clientWidth) < 4) set(i);
   });
@@ -449,43 +569,106 @@ function drawNet() {
 const netObs = new ResizeObserver(drawNet);
 netObs.observe(net);
 
-/* Trilemme : deux sommets sur trois */
+/* Trilemme : un dosage, notes indicatives sur 10 (décentralisation, sécurité, scalabilité) */
 const tri = document.getElementById('tri');
 const svg = document.getElementById('trisvg');
 const res = document.getElementById('res');
-const corners = [...tri.querySelectorAll('.corner')];
-const COMBOS = {
-  DS: ['Bitcoin', 'Sans chef et sûr, mais lent : quelques paiements par seconde. La vitesse se fait au-dessus, avec Lightning.'],
-  CS: ['Visa, les banques', 'Rapide et sûr : Visa traite environ 8 000 paiements par seconde. Mais il y a un chef, qui peut te bannir. Demande à WikiLeaks.'],
-  CD: ['Une chaîne fragile', 'Sans chef et rapide, mais peu protégée : facile à attaquer. C’est arrivé à Ethereum Classic en 2020.']
+const chips = [...document.querySelectorAll('#chips button')];
+const axes = [...tri.querySelectorAll('.ax')];
+const PROF = {
+  btc: { name: 'Bitcoin', shapes: [[10, 10, 2]], text: 'Décentralisation et sécurité à fond, scalabilité faible : quelques paiements par seconde.' },
+  ln: { name: 'Bitcoin + Lightning', shapes: [[10, 10, 2], [7, 7, 9]], text: 'Plein : la base, lente et solide. Pointillés : Lightning, rapide mais un peu moins solide. Au total, un peu des trois.' },
+  visa: { name: 'Visa', shapes: [[1, 8, 10]], text: 'Très rapide (≈ 8 000 paiements par seconde), mais un seul chef, qui peut te bannir. Demande à WikiLeaks.' },
+  frag: { name: 'Une chaîne fragile', shapes: [[6, 3, 8]], text: 'Rapide, mais peu protégée : facile à attaquer. Ethereum Classic l’a été en 2020.' }
 };
-let sel = ['D', 'S'];
-const keyOf = () => (sel.includes('D') && sel.includes('S')) ? 'DS' : (sel.includes('C') && sel.includes('S')) ? 'CS' : 'CD';
+let prof = 'btc';
 function drawTri() {
   const W = tri.clientWidth, H = tri.clientHeight;
   if (!W || !H) return;
-  const bw = Math.min(118, W / 2 - 8);
-  corners.forEach((c) => { c.style.width = bw + 'px'; });
-  const pos = { D: [W / 2, 30], S: [bw / 2 + 2, H - 30], C: [W - bw / 2 - 2, H - 30] };
-  corners.forEach((c) => { const p = pos[c.dataset.k]; c.style.left = p[0] + 'px'; c.style.top = p[1] + 'px'; });
-  const edges = [['D', 'S'], ['S', 'C'], ['C', 'D']].map(([a, b]) => {
-    const on = sel.includes(a) && sel.includes(b);
-    return `<line x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}" stroke="${on ? 'var(--or)' : 'var(--line)'}" stroke-width="${on ? 10 : 3}" stroke-linecap="round"${on ? '' : ' stroke-dasharray="6 8"'}/>`;
+  const v = { D: [W / 2, 46], S: [Math.max(62, W / 2 - (H - 92) * 1.15), H - 46], C: [Math.min(W - 62, W / 2 + (H - 92) * 1.15), H - 46] };
+  const c = [(v.D[0] + v.S[0] + v.C[0]) / 3, (v.D[1] + v.S[1] + v.C[1]) / 3];
+  const at = (k, f) => [c[0] + (v[k][0] - c[0]) * f, c[1] + (v[k][1] - c[1]) * f];
+  const poly = (pts) => pts.map((p) => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const K = ['D', 'S', 'C'];
+  axes.forEach((a) => {
+    const p = v[a.dataset.k];
+    a.style.left = p[0] + 'px';
+    a.style.top = (a.dataset.k === 'D' ? p[1] - 42 : p[1] + 6) + 'px';
+  });
+  const shapes = PROF[prof].shapes.map((sc, n) => {
+    const pts = K.map((k, i) => at(k, Math.max(sc[i], 0.6) / 10));
+    return n === 0
+      ? `<polygon points="${poly(pts)}" fill="color-mix(in srgb, var(--or) 55%, transparent)" stroke="var(--or)" stroke-width="3" stroke-linejoin="round"/>`
+      : `<polygon points="${poly(pts)}" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="7 6" stroke-linejoin="round"/>`;
   }).join('');
-  const cx = (pos.D[0] + pos.S[0] + pos.C[0]) / 3, cy = (pos.D[1] + pos.S[1] + pos.C[1]) / 3 + 12;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.innerHTML = edges + `<text x="${cx}" y="${cy}" text-anchor="middle" font-size="20" font-weight="700" font-family="Ubuntu, Inter, sans-serif" fill="var(--ink)">${COMBOS[keyOf()][0]}</text>`;
+  svg.innerHTML = `<polygon points="${poly(K.map((k) => v[k]))}" fill="none" stroke="var(--ink)" stroke-width="2"/>`
+    + `<polygon points="${poly(K.map((k) => at(k, .5)))}" fill="none" stroke="var(--line)" stroke-width="1.5"/>`
+    + K.map((k) => `<line x1="${c[0]}" y1="${c[1]}" x2="${v[k][0]}" y2="${v[k][1]}" stroke="var(--line)" stroke-width="1.5"/>`).join('')
+    + shapes;
 }
 function renderTri() {
-  corners.forEach((c) => c.setAttribute('aria-pressed', String(sel.includes(c.dataset.k))));
-  const [name, text] = COMBOS[keyOf()];
-  res.innerHTML = `<b>${name}</b><p>${text}</p><p class="small hint">Touche un autre sommet pour comparer.</p>`;
+  chips.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === prof)));
+  const P = PROF[prof];
+  res.innerHTML = `<b>${P.name}</b><p>${P.text}</p>`;
   drawTri();
 }
-corners.forEach((c) => c.addEventListener('click', () => { const k = c.dataset.k; if (!sel.includes(k)) { sel = [sel[1], k]; renderTri(); } }));
+chips.forEach((b) => b.addEventListener('click', () => { prof = b.dataset.p; renderTri(); }));
 const triObs = new ResizeObserver(drawTri);
 triObs.observe(tri);
 renderTri();
+
+/* Prix en échelle logarithmique, cycles de hausse et de baisse */
+const BASE = Date.UTC(2010, 0, 1), DAY = 86400000;
+const day = (iso) => (Date.parse(iso) - BASE) / DAY;
+const pairs = (str) => { const a = str.split(',').map(Number), o = []; for (let i = 0; i < a.length; i += 2) o.push([a[i], a[i + 1]]); return o; };
+const usd = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
+const pct3 = new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 3 });
+const CH = {
+  chBtc: {
+    series: pairs('198,0.08584,205,0.05054,212,0.0611,219,0.0609,226,0.06512,233,0.06593,240,0.064,247,0.06165,254,0.0615,261,0.0627,268,0.062,275,0.06106,282,0.09715,289,0.102,296,0.115,303,0.1925,310,0.34,317,0.279,324,0.2767,331,0.2714,338,0.2029,345,0.2199,352,0.2401,359,0.265,366,0.3,373,0.323,380,0.3868,387,0.4424,394,0.4771,401,0.898,408,1.05,415,0.865,422,0.895,429,0.8848,436,0.8925,443,0.7415,450,0.822,457,0.779,464,0.7332,471,1.098,478,1.632,485,3.094,492,3.849,499,6.925,506,6.712,513,8.401,520,16.54,523,29.03,527,18.85,534,17.51,541,16.36,548,15.46,555,14.62,562,13.26,569,13.99,576,13.37,583,8.502,590,10.81,597,11.35,604,9.031,611,8.203,618,5.853,625,5.237,632,5.341,639,5.007,646,4.112,653,3.61,660,3.148,667,3.257,674,2.963,681,2.986,686,2.105,688,2.202,695,2.478,702,2.82,709,3.249,716,3.194,723,4.234,730,5.295,737,7.097,744,7.047,751,6.303,758,5.391,765,5.678,772,5.519,779,4.39,786,4.926,793,4.834,800,4.892,807,5.27,814,4.552,821,4.793,828,4.779,835,4.962,842,5.196,849,4.903,856,5.048,863,4.945,870,5.094,877,5.135,884,5.213,891,5.458,898,6.2,905,6.35,912,6.627,919,6.796,926,7.627,933,8.507,940,8.748,947,10.81,954,11.59,961,7.831,968,10.55,975,10.23,982,11.06,989,11.89,996,12.17,1003,12.39,1010,11.87,1017,11.65,1024,11.66,1031,10.71,1038,10.8,1045,10.84,1052,11.67,1059,12.53,1066,12.5,1073,13.35,1080,13.33,1087,13.32,1094,13.45,1101,13.5,1108,14.16,1115,15.72,1122,17.86,1129,20.58,1136,23.9,1143,26.93,1150,29.88,1157,34.45,1164,46.07,1171,47.33,1178,71.69,1185,93.9,1192,162.9,1199,88.86,1206,118.5,1213,134.6,1220,116.5,1227,114.9,1234,117.0,1241,130.2,1248,122.6,1255,99.9,1262,99.04,1269,100.3,1276,89.48,1283,72.11,1290,89.89,1297,85.66,1304,92.75,1311,96.37,1318,94.27,1325,99.18,1332,113.1,1339,130.5,1346,118.1,1353,125.1,1360,123.1,1367,127.1,1374,122.5,1381,132.4,1388,166.5,1395,194.5,1402,210.3,1409,327.6,1416,485.3,1423,807.2,1430,964.5,1433,1135,1437,783.6,1444,864.1,1451,615.0,1458,727.3,1465,902.5,1472,845.2,1479,838.4,1486,814.5,1493,814.5,1500,687.4,1507,623.3,1514,610.1,1521,558.5,1528,640.6,1535,634.2,1542,559.0,1549,459.0,1556,458.6,1563,416.4,1570,501.6,1577,438.7,1584,436.7,1591,439.1,1598,447.0,1605,573.3,1612,630.1,1619,657.8,1626,589.7,1633,599.6,1640,600.8,1647,634.7,1654,629.9,1661,625.2,1668,591.6,1675,586.8,1682,589.4,1689,497.8,1696,508.4,1703,478.5,1710,478.4,1717,475.6,1724,400.4,1731,375.5,1738,322.8,1745,377.9,1752,388.7,1759,353.1,1766,324.2,1773,363.6,1780,390.2,1787,367.8,1794,378.7,1801,376.6,1808,356.1,1815,321.0,1822,317.0,1829,263.3,1836,268.8,1839,175.6,1843,211.1,1850,254.5,1857,227.1,1864,224.0,1871,234.4,1878,236.7,1885,260.7,1892,275.3,1899,287.3,1906,268.9,1913,243.0,1920,261.1,1927,237.1,1934,223.3,1941,220.5,1948,240.5,1955,240.7,1962,237.0,1969,240.7,1976,229.5,1983,223.4,1990,232.5,1997,244.3,2004,249.1,2011,271.3,2018,311.5,2025,275.3,2032,293.3,2039,282.4,2046,266.3,2053,258.9,2060,228.7,2067,229.0,2074,240.8,2081,230.5,2088,231.4,2095,233.2,2102,239.5,2109,248.5,2116,263.5,2123,286.0,2130,329.9,2137,372.4,2144,319.9,2151,323.7,2158,371.7,2165,393.3,2172,434.4,2179,442.2,2186,422.7,2193,430.1,2200,448.6,2207,382.5,2214,403.4,2221,366.3,2228,375.2,2235,406.2,2242,438.7,2249,433.1,2256,403.7,2263,411.8,2270,412.1,2277,425.5,2284,420.1,2291,422.0,2298,429.3,2305,463.4,2312,455.0,2319,461.4,2326,460.9,2333,440.6,2340,527.5,2347,575.1,2354,670.4,2361,766.8,2368,630.4,2375,662.6,2382,650.0,2389,681.1,2396,661.4,2403,624.8,2410,594.7,2417,571.4,2424,580.8,2431,575.1,2438,610.5,2445,608.2,2452,611.5,2459,600.6,2466,611.7,2473,617.1,2480,642.9,2487,652.0,2494,699.3,2501,715.9,2508,703.6,2515,730.4,2522,727.7,2529,766.4,2536,770.5,2543,790.6,2550,896.0,2557,997.3,2564,912.5,2571,824.5,2578,922.5,2585,915.6,2592,1015,2599,1006,2606,1059,2613,1182,2620,1276,2627,1232,2634,1020,2641,963.0,2648,1106,2655,1214,2662,1174,2669,1250,2676,1382,2683,1526,2690,1795,2697,2045,2704,2226,2711,2525,2718,2974,2725,2508,2732,2498,2739,2519,2746,2506,2753,1911,2760,2753,2767,2749,2774,3230,2781,4064,2788,4086,2795,4345,2802,4625,2809,4262,2816,3712,2823,3677,2830,4382,2837,4601,2844,5690,2851,5997,2858,6175,2865,7371,2872,5829,2879,8018,2886,9320,2893,11214,2900,15475,2906,19641,2907,19250,2914,14026,2921,13921,2928,16232,2935,13681,2942,11422,2949,11616,2956,8251,2963,8097,2970,10452,2977,9603,2984,11463,2991,9514,2998,8189,3005,8441,3012,6805,3019,7010,3026,8342,3033,8801,3040,9397,3047,9595,3054,8696,3061,8511,3068,7338,3075,7702,3082,6745,3089,6451,3096,6146,3103,6361,3110,6705,3117,6348,3124,7399,3131,8230,3138,7032,3145,6315,3152,6491,3159,6690,3166,7287,3173,6249,3180,6497,3187,6703,3194,6604,3201,6565,3208,6183,3215,6415,3222,6407,3229,6420,3236,6335,3243,5555,3250,3947,3257,4099,3264,3540,3270,3185,3271,3195,3278,3943,3285,3825,3292,4046,3299,3509,3306,3538,3313,3538,3320,3413,3327,3642,3334,3623,3341,3754,3348,3782,3355,3904,3362,3967,3369,3971,3376,4094,3383,5189,3390,5157,3397,5296,3404,5149,3411,5728,3418,6943,3425,8220,3432,8732,3439,8744,3446,7634,3453,9020,3460,10794,3467,10843,3474,11456,3481,10283,3488,10590,3495,9530,3502,10987,3509,11530,3516,10331,3523,10100,3530,9763,3537,10407,3544,10306,3551,10047,3558,8065,3565,7855,3572,8291,3579,8214,3586,9558,3593,9210,3600,9043,3607,8505,3614,6943,3621,7418,3628,7529,3635,7111,3642,7479,3649,7392,3656,7346,3663,8165,3670,8687,3677,8574,3684,9339,3691,10151,3698,9952,3705,9973,3712,8542,3719,8110,3726,5359,3733,5831,3740,5905,3747,6791,3754,6979,3761,7150,3768,7684,3775,8897,3782,8715,3789,9683,3796,8806,3803,9434,3810,9748,3817,9343,3824,9285,3831,9108,3838,9080,3845,9289,3852,9219,3859,9934,3866,11094,3873,11681,3880,11900,3887,11666,3894,11699,3901,10253,3908,10323,3915,10921,3922,10759,3929,10666,3936,11378,3943,11490,3950,13042,3957,13737,3964,15500,3971,15987,3978,18483,3985,18191,3992,19356,3999,19156,4006,23529,4013,26431,4020,33278,4027,38329,4034,36070,4041,32216,4048,33158,4055,39003,4062,48830,4069,57501,4076,45359,4083,51086,4090,59906,4097,57448,4104,55713,4111,58202,4118,59933,4125,56390,4132,48947,4139,56573,4146,58288,4153,46023,4160,34774,4167,35652,4174,35721,4181,38925,4188,35600,4195,34506,4202,35356,4209,34258,4216,31708,4223,35120,4230,39969,4237,43972,4244,47074,4251,49363,4258,48948,4265,51748,4272,46181,4279,47218,4286,43131,4293,48203,4300,54701,4307,61462,4314,60865,4321,61433,4328,63044,4329,67542,4335,65032,4342,59033,4349,57249,4356,49327,4363,50137,4370,46876,4377,50798,4384,47353,4391,41886,4398,43169,4405,36271,4412,37984,4419,42358,4426,42196,4433,38552,4440,37665,4447,38399,4454,37808,4461,41295,4468,46777,4475,46441,4482,42264,4489,39705,4496,39512,4503,38459,4510,34059,4517,31183,4524,30332,4531,29430,4538,29915,4545,26830,4552,20492,4559,21067,4566,19277,4573,20831,4580,20828,4587,22653,4594,23356,4601,23154,4608,24314,4615,21554,4622,19674,4629,19962,4636,21733,4643,19427,4650,18793,4657,19015,4664,19428,4671,19262,4678,19565,4685,20617,4692,20947,4695,15758,4699,16320,4706,16247,4713,16436,4720,17122,4727,17094,4734,16776,4741,16825,4748,16607,4755,17059,4762,20876,4769,22716,4776,23775,4783,22957,4790,21772,4797,24367,4804,23542,4811,22420,4818,22066,4825,28185,4832,28049,4839,28162,4846,28358,4853,30313,4860,27605,4867,29362,4874,28762,4881,26918,4888,26777,4895,28098,4902,27158,4909,25907,4916,26354,4923,30467,4930,30594,4937,30163,4944,30250,4951,30067,4958,29263,4965,29048,4972,29286,4979,26176,4986,26086,4993,25963,5000,25831,5007,26502,5014,26287,5021,27950,5028,27936,5035,27130,5042,29984,5049,34574,5056,35105,5063,37053,5070,37443,5077,37483,5084,39978,5091,43733,5098,41429,5105,43098,5112,42217,5119,43844,5126,41888,5133,41537,5140,41983,5147,42576,5154,48201,5161,52148,5168,51746,5175,62991,5182,68882,5189,68285,5196,67290,5203,71227,5210,69393,5217,65649,5224,64968,5231,62979,5238,64068,5245,61431,5252,66259,5259,68445,5266,67805,5273,69644,5280,66623,5287,63345,5294,62763,5301,56113,5308,61015,5315,68057,5322,68171,5329,58306,5336,58836,5343,58793,5350,64498,5357,57349,5364,54859,5371,59130,5378,63572,5385,65618,5392,62790,5399,62759,5406,69012,5413,68000,5420,68743,5427,80409,5434,89733,5441,97980,5448,97470,5455,100799,5462,104551,5469,95149,5476,93458,5483,98415,5490,94354,5497,100955,5504,102833,5511,97425,5518,96310,5525,96182,5532,96092,5539,94328,5546,80648,5553,82492,5560,85761,5567,82216,5574,77949,5581,83569,5588,85102,5595,93813,5602,94378,5609,103976,5616,106016,5623,108915,5630,105750,5637,105728,5644,105513,5651,100899,5658,108361,5665,109180,5672,118900,5679,117306,5686,119438,5693,114264,5700,119189,5707,117602,5714,113516,5721,108316,5728,111308,5735,115396,5742,115321,5749,112170,5756,123524,5757,124824,5763,115153,5770,108707,5777,114557,5784,110389,5791,104686,5798,94182,5805,86872,5812,90608,5819,90068,5826,88096,5833,88533,5840,87748,5847,91360,5854,90717,5861,94261,5868,86446,5875,76911,5882,70523,5889,68630,5896,67550,5903,65734,5910,66203,5917,72712,5924,68018,5931,65967,5938,68922,5945,70685,5952,73905,5959,78539,5966,78649,5973,82257,5980,77498,5986,76620'),
+    extra: [['2026-06-30', 58559], ['2026-11-21', 55130], ['2026-11-26', 60700]],
+    cycle: [['2010-07-25', 0.0505], ['2011-06-08', 29.03, 'nw'], ['2011-11-18', 2.105], ['2013-12-04', 1134.9], ['2015-01-14', 175.64, 'se'], ['2017-12-16', 19640.5], ['2018-12-15', 3185.1], ['2021-11-08', 67541.8, 'nw'], ['2022-11-09', 15758.3], ['2025-10-06', 124824.5], ['2026-11-21', 55130]],
+    from: day('2010-07-01'), to: day('2026-12-31'), ymin: 0.03, ymax: 400000, ticks: [0.1, 10, 1000, 100000]
+  },
+  chEth: {
+    series: pairs('2045,1.2,2052,1.782,2059,1.4,2066,1.179,2073,1.363,2080,1.146,2087,0.8837,2094,0.7703,2101,0.6796,2108,0.6352,2115,0.523,2119,0.42,2122,0.5561,2129,0.8893,2136,0.9119,2143,0.88,2150,0.96,2157,0.9076,2164,0.8699,2171,0.96,2178,0.8935,2185,0.853,2192,0.95,2199,0.9699,2206,1.212,2213,2.012,2220,2.441,2227,2.549,2234,5.219,2241,4.35,2248,6.311,2255,10.75,2262,13.28,2269,10.5,2276,11.0,2283,11.63,2290,9.109,2297,8.574,2304,8.412,2311,8.817,2318,9.39,2325,10.23,2332,14.01,2339,11.87,2346,13.72,2353,14.23,2360,11.26,2367,14.35,2374,12.11,2381,10.95,2388,11.72,2395,14.44,2402,12.52,2409,10.99,2416,11.58,2423,11.3,2430,11.18,2437,11.89,2444,12.15,2451,12.81,2458,12.96,2465,13.24,2472,12.24,2479,11.96,2486,12.04,2493,10.41,2500,11.14,2507,9.888,2514,9.7,2521,9.312,2528,7.894,2535,8.122,2542,7.797,2549,7.243,2556,8.126,2563,9.925,2570,9.779,2577,10.96,2584,10.56,2591,11.4,2598,11.48,2605,12.9,2612,13.65,2619,18.68,2626,21.45,2633,32.24,2640,50.16,2647,50.69,2654,44.62,2661,49.12,2668,48.61,2675,70.48,2682,95.52,2689,88.28,2696,124.6,2703,155.7,2710,224.3,2717,345.0,2724,368.0,2731,304.8,2738,261.2,2745,244.2,2752,170.6,2759,232.0,2766,206.0,2773,248.9,2780,309.3,2787,294.0,2794,332.4,2801,349.1,2808,305.2,2815,255.2,2822,285.1,2829,301.7,2836,311.5,2843,339.2,2850,300.0,2857,295.1,2864,300.0,2871,316.1,2878,347.4,2885,466.8,2892,459.9,2899,483.1,2906,697.8,2913,725.2,2920,713.8,2927,1006,2934,1380,2941,1152,2948,1093,2955,960.9,2962,850.7,2969,975.2,2976,834.0,2983,854.4,2990,684.9,2997,550.9,3004,525.1,3011,394.5,3018,384.5,3025,503.2,3032,605.4,3039,682.5,3046,811.4,3053,685.8,3060,693.8,3067,584.3,3074,591.8,3081,596.0,3088,497.3,3095,475.2,3102,451.7,3109,480.5,3116,433.9,3123,462.0,3130,467.3,3137,406.4,3144,322.9,3151,295.4,3158,278.4,3165,294.9,3172,196.6,3179,222.8,3186,240.2,3193,231.3,3200,223.7,3207,196.6,3214,202.6,3221,201.4,3228,198.4,3235,210.6,3242,172.3,3249,111.2,3256,117.0,3263,90.6,3270,82.83,3277,115.2,3284,140.1,3291,154.3,3298,124.3,3305,123.5,3312,115.0,3319,108.6,3326,118.1,3333,121.8,3340,157.5,3347,132.2,3354,136.3,3361,140.6,3368,136.5,3375,142.1,3382,165.4,3389,164.1,3396,173.2,3403,155.7,3410,162.0,3417,199.6,3424,234.8,3431,251.9,3438,265.1,3445,244.6,3452,269.1,3459,308.0,3466,318.5,3473,287.3,3480,268.7,3487,230.7,3494,206.6,3501,221.8,3508,206.3,3515,185.5,3522,191.1,3529,172.2,3536,178.3,3543,188.6,3550,215.5,3557,173.8,3564,176.2,3571,180.3,3578,171.6,3585,179.7,3592,183.0,3599,185.0,3606,182.3,3613,152.3,3620,152.0,3627,147.5,3634,141.8,3641,127.1,3648,128.0,3655,134.1,3662,142.8,3669,175.1,3676,160.5,3683,183.6,3690,224.0,3697,265.0,3704,261.8,3711,220.1,3718,238.1,3725,122.1,3732,132.5,3739,131.0,3746,144.3,3753,158.4,3760,188.1,3767,193.8,3774,214.1,3781,210.8,3788,200.8,3795,206.9,3802,243.6,3809,242.0,3816,238.1,3823,228.9,3830,220.7,3837,228.9,3844,239.3,3851,235.9,3858,305.4,3865,387.2,3872,392.4,3879,432.6,3886,395.9,3893,400.4,3900,331.4,3907,386.2,3914,385.2,3921,354.6,3928,346.7,3935,371.3,3942,368.3,3949,412.3,3956,386.6,3963,436.8,3970,462.6,3977,547.4,3984,540.8,3991,594.9,3998,568.5,4005,659.7,4012,635.8,4019,775.3,4026,1287,4033,1232,4040,1233,4047,1380,4054,1684,4061,1819,4068,1913,4075,1454,4082,1660,4089,1927,4096,1813,4103,1718,4110,2025,4117,2130,4124,2342,4131,2237,4138,2949,4145,3887,4152,3673,4159,2321,4166,2289,4173,2605,4180,2381,4187,2175,4194,1802,4201,2216,4208,2117,4215,1897,4222,2179,4229,2544,4236,3143,4243,3269,4250,3235,4257,3243,4264,3886,4271,3259,4278,3425,4285,2932,4292,3394,4299,3580,4306,3837,4313,4160,4320,4311,4327,4512,4329,4811,4334,4645,4341,4413,4348,4087,4355,4098,4362,4080,4369,3966,4376,4100,4383,3761,4390,3093,4397,3334,4404,2401,4411,2593,4418,3018,4425,2911,4432,2758,4439,2778,4446,2663,4453,2578,4460,2949,4467,3146,4474,3452,4481,3258,4488,3066,4495,2941,4502,2730,4509,2637,4516,2053,4523,1974,4530,1794,4537,1799,4544,1530,4551,992.8,4558,1242,4565,1067,4572,1217,4579,1353,4586,1550,4593,1693,4600,1696,4607,1981,4614,1576,4621,1493,4628,1555,4635,1780,4642,1469,4649,1317,4656,1311,4663,1315,4670,1275,4677,1314,4684,1619,4691,1627,4698,1252,4705,1219,4712,1205,4719,1241,4726,1267,4733,1187,4740,1221,4747,1195,4754,1264,4761,1552,4768,1628,4775,1570,4782,1671,4789,1540,4796,1691,4803,1594,4810,1566,4817,1477,4824,1764,4831,1742,4838,1822,4845,1852,4852,2094,4859,1876,4866,1906,4873,1900,4880,1800,4887,1819,4894,1831,4901,1892,4908,1753,4915,1728,4922,1876,4929,1923,4936,1864,4943,1931,4950,1861,4957,1881,4964,1835,4971,1849,4978,1669,4985,1646,4992,1637,4999,1635,5006,1635,5013,1593,5020,1671,5027,1635,5034,1556,5041,1629,5048,1776,5055,1860,5062,2046,5069,1962,5076,2085,5083,2165,5090,2342,5097,2225,5104,2311,5111,2294,5118,2239,5125,2580,5132,2470,5139,2267,5146,2295,5153,2501,5160,2787,5167,2990,5174,3420,5181,3914,5188,3519,5195,3355,5202,3506,5209,3368,5216,3030,5223,3156,5230,3253,5237,3117,5244,2911,5251,3123,5258,3748,5265,3813,5272,3680,5279,3568,5286,3496,5293,3374,5300,3068,5307,3182,5314,3521,5321,3254,5328,2905,5335,2607,5342,2612,5349,2762,5356,2513,5363,2270,5370,2417,5377,2605,5384,2675,5391,2414,5398,2478,5405,2650,5412,2481,5419,2489,5426,3140,5433,3134,5440,3397,5447,3713,5454,4006,5461,3869,5468,3329,5475,3397,5482,3658,5489,3286,5496,3303,5503,3323,5510,3120,5517,2637,5524,2694,5531,2766,5538,2209,5545,2200,5552,1940,5559,1979,5566,1824,5573,1803,5580,1646,5587,1615,5594,1820,5601,1835,5608,2585,5615,2475,5622,2530,5629,2533,5636,2527,5643,2533,5650,2266,5657,2438,5664,2518,5671,2940,5678,3592,5685,3743,5692,3394,5699,4262,5706,4423,5712,4831,5713,4778,5720,4372,5727,4277,5734,4666,5741,4484,5748,4020,5755,4489,5762,3750,5769,3889,5776,3955,5783,3872,5790,3405,5797,3170,5804,2772,5811,2991,5818,3036,5825,3115,5832,2975,5839,2942,5846,3125,5853,3082,5860,3307,5867,2951,5874,2444,5881,2086,5888,2087,5895,1975,5902,1963,5909,1970,5916,2096,5923,2125,5930,1994,5937,2064,5944,2287,5951,2354,5958,2319,5965,2319,5972,2326,5979,2180,5986,2116'),
+    extra: [['2026-11-21', 1580], ['2026-11-26', 1700]],
+    cycle: [['2015-10-21', 0.42], ['2018-01-13', 1380.14], ['2018-12-15', 82.83], ['2021-11-08', 4811.16], ['2022-06-18', 992.79], ['2025-08-22', 4831.1], ['2026-11-21', 1580]],
+    from: day('2015-07-01'), to: day('2026-12-31'), ymin: 0.2, ymax: 20000, ticks: [1, 10, 100, 1000]
+  }
+};
+function drawChart(id) {
+  const box = document.getElementById(id), C = CH[id];
+  const W = box.clientWidth, H = box.clientHeight;
+  if (!W || !H) return;
+  const m = { l: 62, r: 10, t: 26, b: 24 };
+  const L0 = Math.log10(C.ymin), L1 = Math.log10(C.ymax);
+  const x = (t) => m.l + (t - C.from) / (C.to - C.from) * (W - m.l - m.r);
+  const y = (val) => m.t + (L1 - Math.log10(val)) / (L1 - L0) * (H - m.t - m.b);
+  const pts = C.cycle.map(([d, val, pos]) => [day(d), val, pos]);
+  let g = '';
+  C.ticks.forEach((tk) => { g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(tk)}" y2="${y(tk)}" stroke="var(--line)"/><text x="${m.l - 6}" y="${y(tk) + 4}" font-size="12" text-anchor="end" fill="var(--muted)">${usd.format(tk)} $</text>`; });
+  const y0 = new Date(BASE + C.from * DAY).getUTCFullYear() + 1, step = W < 520 ? 2 : 1;
+  for (let yr = y0; yr <= 2026; yr += step) { const xx = x(day(yr + '-01-01')); if (xx > 16 && xx < W - 16) g += `<text x="${xx}" y="${H - 6}" font-size="12" text-anchor="middle" fill="var(--muted)">${yr}</text>`; }
+  for (let i = 1; i + 1 < pts.length; i += 2) g += `<rect x="${x(pts[i][0])}" y="${m.t}" width="${x(pts[i + 1][0]) - x(pts[i][0])}" height="${H - m.t - m.b}" fill="color-mix(in srgb, var(--no) 16%, transparent)"/>`;
+  const path = C.series.map(([t, val], i) => (i ? 'L' : 'M') + x(t).toFixed(1) + ',' + y(val).toFixed(1)).join('');
+  const last = C.series[C.series.length - 1];
+  const dash = [[last[0], last[1]], ...C.extra.map(([d, val]) => [day(d), val])].map(([t, val], i) => (i ? 'L' : 'M') + x(t).toFixed(1) + ',' + y(val).toFixed(1)).join('');
+  g += `<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><path d="${dash}" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="3 4"/>`;
+  const anchor = (xx) => xx < m.l + 30 ? 'start' : xx > W - 34 ? 'end' : 'middle';
+  for (let i = 1; i < pts.length; i++) {
+    const [t, val, pos] = pts[i], prev = pts[i - 1][1], up = i % 2 === 1, xx = x(t), yy = y(val);
+    const p = (val / prev - 1) * 100;
+    const label = up ? '+' + pct3.format(p) + ' %' : '−' + Math.round(-p) + ' %';
+    g += `<circle cx="${xx}" cy="${yy}" r="4" fill="${up ? 'var(--or)' : 'var(--no)'}"/>`;
+    const lx = pos === 'se' ? xx + 7 : pos === 'nw' ? xx - 7 : xx, la = pos === 'se' ? 'start' : pos === 'nw' ? 'end' : anchor(xx);
+    g += `<text x="${lx}" y="${up ? yy - 9 : yy + 19}" font-size="13" font-weight="700" text-anchor="${la}" fill="${up ? 'var(--or-ink)' : 'var(--no)'}">${label}</text>`;
+  }
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+const chartObs = new ResizeObserver((entries) => entries.forEach((e) => drawChart(e.target.id)));
+['chBtc', 'chEth'].forEach((id) => chartObs.observe(document.getElementById(id)));
 }
 </script>
 </body>
