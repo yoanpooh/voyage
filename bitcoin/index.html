@@ -5,184 +5,168 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f7931a">
-<meta name="description" content="L'histoire de Satoshi et de Bitcoin, le trilemme de la blockchain, et les façons d'acheter du bitcoin.">
+<meta name="description" content="Bitcoin pour un tout débutant : Satoshi, WikiLeaks, la limite de la technologie, et comment en acheter.">
 <title>Bitcoin, de A à B</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23f7931a'/%3E%3Ctext x='32' y='45' font-size='38' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23fff' transform='rotate(14 32 32)'%3E%E2%82%BF%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Ubuntu:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 <style>
-/* VOICE everyday learning: a story told calmly to a newcomer, then two practical chapters
+/* VOICE a first Bitcoin lesson for someone who is not a fan: one idea per slide, few words
    IDEA the deck behaves like a blockchain: each slide is a block, the progress bar is the chain
-   PICTURE one real artefact per slide: the white paper, block 0, Satoshi's forum posts, the node network, the live triangle, the custody diagram
-   COLOUR white ground, ink #17140f, Bitcoin orange #f7931a in full-bleed chapter covers and on the chain; night #15120e
+   PICTURE one simple artefact per slide: the white paper, the blocked cards, Satoshi's post, the node network, the triangle, the keys
+   COLOUR white ground, ink #17140f, Bitcoin orange #f7931a on the cover, the chain and what matters; night #15120e
    TYPE Ubuntu 700 (the Bitcoin wordmark's face) + Inter
-   LAYOUT top: chapter tabs and chain; one slide per screen, text then artefact (side by side above 880px); bottom: previous, count, next */
-:root{color-scheme:light;--bg:#fff;--ink:#17140f;--muted:#5d564c;--panel:#f4f1ec;--line:#e0d9cf;--or:#f7931a;--or-ink:#a14d00;--no:#c0352b;--paper:#fff;--paper-ink:#17140f}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#15120e;--ink:#f3eee6;--muted:#b3aa9c;--panel:#221d17;--line:#3b342b;--or-ink:#ffb257;--no:#ff7a6b;--paper:#f3eee6}}
-:root[data-theme=dark]{color-scheme:dark;--bg:#15120e;--ink:#f3eee6;--muted:#b3aa9c;--panel:#221d17;--line:#3b342b;--or-ink:#ffb257;--no:#ff7a6b;--paper:#f3eee6}
+   LAYOUT top: tabs and chain; one slide per screen, text then picture (side by side above 880px); bottom: back, count, next */
+:root{color-scheme:light;--bg:#fff;--ink:#17140f;--muted:#5d564c;--panel:#f4f1ec;--line:#e0d9cf;--or:#f7931a;--or-ink:#a14d00;--no:#c0352b}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#15120e;--ink:#f3eee6;--muted:#b3aa9c;--panel:#221d17;--line:#3b342b;--or-ink:#ffb257;--no:#ff7a6b}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#15120e;--ink:#f3eee6;--muted:#b3aa9c;--panel:#221d17;--line:#3b342b;--or-ink:#ffb257;--no:#ff7a6b}
 *{box-sizing:border-box;min-width:0}
 html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
-h1,h2,h3,.disp{font-family:Ubuntu,Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.05;text-wrap:balance;margin:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:Ubuntu,Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.05;text-wrap:balance;margin:0}
 p{margin:0}
 a{color:var(--or-ink)}
 button{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--or);outline-offset:2px}
-/* Barre du haut */
-.top{padding:calc(8px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--line);background:var(--bg)}
+.top{padding:calc(8px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--line)}
 .toprow{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1080px;margin:0 auto}
-.brand{font-family:Ubuntu,sans-serif;font-weight:700;font-size:16px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand{font-family:Ubuntu,sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .coin{width:22px;height:22px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-size:15px;transform:rotate(14deg)}
 #tabs{display:flex;gap:4px}
 #tabs button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:8px 12px;font-size:15px;font-weight:600;cursor:pointer;min-height:40px}
 #tabs button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-#chain{display:grid;gap:3px;max-width:1080px;margin:10px auto 0}
+#chain{display:grid;gap:4px;max-width:1080px;margin:10px auto 0}
 #chain button{height:12px;border:0;border-radius:2px;padding:0;background:var(--line);cursor:pointer;transition:background .25s}
 #chain button.done{background:var(--or)}
 #chain button.now{background:var(--ink)}
-/* Diaporama */
 #deck{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}
 #deck::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overscroll-behavior-y:contain;padding:clamp(20px,4vw,48px) max(5vw,16px,env(safe-area-inset-right)) 32px max(5vw,16px,env(safe-area-inset-left))}
-.in{max-width:1080px;margin:0 auto;min-height:100%;display:grid;align-content:center;gap:20px}
-.trig{grid-template-areas:"t" "f" "r"}
-@media (min-width:880px){.trig{grid-template-areas:"t f" "r f"}}
-@media (min-width:880px){.in.two{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;column-gap:56px}}
-.txt{display:grid;gap:14px;max-width:62ch}
-.when{font-family:Ubuntu,sans-serif;font-weight:700;font-size:clamp(22px,5vw,28px);color:var(--or-ink);line-height:1.1}
-h2{font-size:clamp(30px,7vw,46px)}
+.slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overscroll-behavior-y:contain;padding:clamp(20px,4vw,48px) max(5vw,16px,env(safe-area-inset-right)) 28px max(5vw,16px,env(safe-area-inset-left))}
+.in{max-width:1000px;margin:0 auto;min-height:100%;display:grid;align-content:center;gap:22px}
+.trig{grid-template-areas:"t" "f" "r";gap:12px}
+#tri{min-height:240px}
+@media (min-width:880px){.trig{grid-template-areas:"t f" "r f"}#tri{min-height:320px}}
+@media (min-width:880px){.in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;column-gap:56px}}
+.txt{display:grid;gap:14px}
+.when{font-family:Ubuntu,sans-serif;font-weight:700;font-size:20px;color:var(--or-ink)}
+h2{font-size:clamp(32px,8vw,50px)}
+.big{font-size:clamp(19px,2.6vw,22px);line-height:1.45}
 .small{font-size:14px;color:var(--muted)}
-.lead{font-size:clamp(18px,2.4vw,20px)}
-.box{background:var(--panel);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
-.box b{font-family:Ubuntu,sans-serif}
-.fact{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:baseline}
-.tag{font-size:13px;font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;background:var(--ink);color:var(--bg)}
-.tag.hyp{background:transparent;color:var(--ink);border:1.5px dashed var(--ink)}
-ul.dots{margin:0;padding-left:1.1em;display:grid;gap:6px}
-/* Couvertures orange */
 .cover{background:var(--or);color:#17140f}
 .cover .small{color:#3d2a12}
-.cover h1{font-size:clamp(40px,10vw,72px)}
-.cover h2{font-size:clamp(36px,8.5vw,60px)}
-.cover .num{font-family:Ubuntu,sans-serif;font-weight:700;font-size:clamp(56px,14vw,110px);line-height:.9}
-.chapters{display:grid;gap:10px}
-.chapters button{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;text-align:left;background:#17140f;color:#fff;border:0;border-radius:12px;padding:14px 16px;cursor:pointer;position:relative}
-.chapters button+button::before{content:"";position:absolute;left:30px;top:-11px;width:4px;height:12px;background:#17140f}
-.chapters .n{grid-row:span 2;font-family:Ubuntu,sans-serif;font-weight:700;font-size:34px;line-height:1;color:var(--or)}
-.chapters strong{font-family:Ubuntu,sans-serif;font-size:20px}
-.chapters span{font-size:15px;color:#d9d2c6}
-.ab{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 14px;align-items:start}
-.ab .pt{font-family:Ubuntu,sans-serif;font-weight:700;font-size:28px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#17140f;color:var(--or)}
-/* Artefacts */
-.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:4px;padding:26px 22px;font-family:"Times New Roman",Times,Georgia,serif;text-align:center;box-shadow:0 10px 0 -4px var(--panel),0 20px 0 -8px var(--line)}
-.paper .t{font-size:clamp(20px,4.6vw,26px);font-weight:700;line-height:1.2}
-.paper .a{margin-top:12px;font-size:17px}
-.paper .m{font-size:15px;font-style:italic}
-.paper .abs{margin-top:16px;text-align:justify;font-size:14px;line-height:1.45}
-.blk{border:2px solid var(--ink);border-radius:10px;overflow:hidden}
-.blk .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--ink);color:var(--bg);padding:10px 14px;font-family:Ubuntu,sans-serif;font-weight:700}
-.blk .b{padding:14px;display:grid;gap:10px}
-.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:14px;overflow-wrap:anywhere}
-.blk .msg{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:clamp(15px,3.6vw,18px);background:var(--panel);border-radius:8px;padding:12px;overflow-wrap:anywhere}
-.post{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.cover h1{font-size:clamp(44px,11vw,76px)}
+.parts{display:grid;gap:10px}
+.parts button{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px;text-align:left;background:#17140f;color:#fff;border:0;border-radius:12px;padding:14px 16px;cursor:pointer;font-family:Ubuntu,sans-serif;font-weight:700;font-size:20px}
+.parts .n{font-size:32px;color:var(--or);line-height:1}
+.paper{background:#fff;color:#17140f;border:1px solid var(--line);border-radius:4px;padding:26px 20px;font-family:"Times New Roman",Times,Georgia,serif;text-align:center;box-shadow:0 10px 0 -4px var(--panel),0 20px 0 -8px var(--line)}
+.paper b{display:block;font-size:clamp(21px,5vw,26px);line-height:1.2}
+.paper span{display:block;margin-top:10px;font-size:17px}
+.props{display:grid;gap:10px}
+.props div{display:grid;grid-template-columns:44px minmax(0,1fr);gap:2px 14px;align-items:start;background:var(--panel);border-radius:14px;padding:14px 16px}
+.props i{grid-row:span 2;width:44px;height:44px;border-radius:50%;background:var(--or);color:#17140f;display:grid;place-items:center;font-style:normal;font-family:Ubuntu,sans-serif;font-weight:700;font-size:20px}
+.props b{font-family:Ubuntu,sans-serif;font-size:21px}
+.props span{font-size:16px;color:var(--muted)}
+.pay{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pay div{border:2px solid var(--ink);border-radius:12px;padding:16px 10px;text-align:center;position:relative;overflow:hidden;display:grid;gap:2px}
+.pay b{font-family:Ubuntu,sans-serif;font-size:clamp(18px,4.6vw,22px)}
+.pay span{font-size:14px;font-weight:700;color:var(--no)}
+.pay .x::after{content:"";position:absolute;left:-10%;top:50%;width:120%;height:3px;background:var(--no);transform:rotate(-12deg)}
+.pay .ok{background:var(--or);border-color:var(--or);color:#17140f}
+.pay .ok span{color:#17140f}
+.post{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0}
 .post .h{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);font-size:14px}
 .av{width:34px;height:34px;border-radius:50%;background:var(--or);color:#17140f;display:grid;place-items:center;font-family:Ubuntu,sans-serif;font-weight:700;flex:none}
-.post .who{font-weight:700;font-size:15px}
-.post .b{padding:14px;display:grid;gap:10px}
-.post .fr{font-size:clamp(18px,2.6vw,21px);line-height:1.45}
-.post .en{font-size:14px;color:var(--muted);font-style:italic;border-left:3px solid var(--line);padding-left:10px}
-.cut{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.cut div{border:2px solid var(--ink);border-radius:10px;padding:12px 8px;text-align:center;position:relative;overflow:hidden}
-.cut b{display:block;font-family:Ubuntu,sans-serif;font-size:clamp(15px,3.8vw,19px)}
-.cut span{font-size:13px;color:var(--muted)}
-.cut div::after{content:"";position:absolute;left:-10%;top:50%;width:120%;height:3px;background:var(--no);transform:rotate(-14deg)}
-.stamp{justify-self:center;border:3px solid var(--no);color:var(--no);font-family:Ubuntu,sans-serif;font-weight:700;font-size:18px;border-radius:8px;padding:4px 12px;transform:rotate(-3deg)}
-.tl{display:grid;gap:0;border-left:3px solid var(--or);margin-left:6px}
-.tl div{display:grid;gap:2px;padding:0 0 16px 18px;position:relative}
-.tl div::before{content:"";position:absolute;left:-9.5px;top:5px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--or)}
+.post .b{padding:16px;font-size:clamp(19px,2.6vw,22px);line-height:1.45}
+.tl{display:grid;border-left:3px solid var(--or);margin-left:8px}
+.tl div{display:grid;gap:2px;padding:0 0 18px 20px;position:relative}
+.tl div::before{content:"";position:absolute;left:-10.5px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:3px solid var(--or)}
 .tl div:last-child{padding-bottom:0}
-.tl b{font-family:Ubuntu,sans-serif;color:var(--or-ink);white-space:nowrap}
-.verdict{border:2px solid var(--ink);border-radius:12px;padding:18px;display:grid;gap:10px}
-.verdict .q{font-family:Ubuntu,sans-serif;font-weight:700;font-size:clamp(20px,4.4vw,26px);line-height:1.2}
-.fig{position:relative;min-height:300px}
+.tl div:last-child::before{background:var(--or)}
+.tl b{font-family:Ubuntu,sans-serif;color:var(--or-ink)}
+.fig{position:relative;min-height:280px}
 .fig>svg{position:absolute;inset:0;width:100%;height:100%}
 svg text{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
-/* Trilemme */
-#tri{min-height:290px}
-#tri .corner{position:absolute;z-index:1;transform:translate(-50%,-50%);width:122px;min-height:56px;border-radius:14px;border:2px solid var(--ink);background:var(--bg);cursor:pointer;padding:6px 8px;display:grid;line-height:1.15}
-#tri .corner b{font-family:Ubuntu,sans-serif;font-size:16px}
-#tri .corner span{font-size:13px;color:var(--muted)}
+#tri .corner{position:absolute;z-index:1;transform:translate(-50%,-50%);width:118px;min-height:48px;border-radius:14px;border:2px solid var(--ink);background:var(--bg);cursor:pointer;padding:8px;font-family:Ubuntu,sans-serif;font-weight:700;font-size:17px}
 #tri .corner[aria-pressed=true]{background:var(--or);border-color:var(--or);color:#17140f}
-#tri .corner[aria-pressed=true] span{color:#3d2a12}
-#tri .corner.lost{border-style:dashed;opacity:.75}
-.res{border-radius:14px;background:var(--panel);padding:14px 16px;display:grid;gap:6px;min-height:150px}
-.res h3{font-size:22px}
-.lost-l{font-size:14px;font-weight:700;color:var(--no)}
-.slider{display:grid;gap:4px}
-.slider label{font-weight:700;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.slider output{font-family:Ubuntu,sans-serif;font-size:22px;color:var(--or-ink);white-space:nowrap}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;margin:0;cursor:pointer}
-input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(to right,var(--or) var(--pct,0%),var(--line) var(--pct,0%))}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-11px;border-radius:50%;background:var(--bg);border:4px solid var(--or);box-shadow:0 1px 4px rgba(0,0,0,.3)}
-input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:var(--line)}
-input[type=range]::-moz-range-progress{height:8px;border-radius:4px;background:var(--or)}
-input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--bg);border:4px solid var(--or)}
-.ticks{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);white-space:nowrap}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr));gap:10px}
-.kpi{background:var(--panel);border-radius:12px;padding:10px 12px}
-.kpi b{display:block;font-family:Ubuntu,sans-serif;font-size:clamp(22px,5vw,28px);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
-.kpi span{font-size:14px;color:var(--muted)}
-.meter{display:grid;grid-template-columns:9.5em minmax(0,1fr);align-items:center;gap:6px 10px;font-size:15px;font-weight:600}
-.meter i{display:block;height:14px;border-radius:7px;background:var(--line);overflow:hidden}
-.meter i::after{content:"";display:block;height:100%;width:var(--w,50%);background:var(--c,var(--or));border-radius:7px;transition:width .3s}
-.who{font-family:Ubuntu,sans-serif;font-weight:700;font-size:19px}
-.slate{background:#2b2f2c;color:#eef0ea;border-radius:12px;padding:16px 18px;border:8px solid #8a6a45;display:grid;gap:4px;font-size:16px}
-.slate div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #5d635e;padding:3px 0}
-.slate div span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
-.slate .tot{border:0;font-weight:700;color:#ffc46b;padding-top:8px}
-.sheet{display:grid;grid-template-columns:minmax(0,9em) minmax(0,1fr);gap:0;margin:0;border-top:2px solid var(--ink)}
-.sheet dt,.sheet dd{margin:0;padding:10px 0;border-bottom:1px solid var(--line)}
-.sheet dt{font-weight:700;padding-right:12px;font-size:15px}
-.sheet dd{font-size:16px}
-@media (max-width:480px){.sheet{grid-template-columns:minmax(0,1fr)}.sheet dt{border:0;padding-bottom:0}.sheet dd{padding-top:2px}}
-.flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;text-align:center;font-weight:700;font-size:15px}
-.flow span{border:2px solid var(--ink);border-radius:10px;padding:10px 6px}
-.flow span.me{background:var(--or);border-color:var(--or);color:#17140f}
-.flow em{font-style:normal;font-size:13px;color:var(--muted);display:grid;justify-items:center;line-height:1.2}
-.flow em::after{content:"";display:block;width:44px;height:3px;background:var(--ink);margin-top:4px;clip-path:polygon(0 0,85% 0,85% -300%,100% 50%,85% 400%,85% 100%,0 100%)}
-.flow.no em::after{background:var(--no)}
-.prof{font-family:Ubuntu,sans-serif;font-weight:700;font-size:19px;line-height:1.25}
-.tbl{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:15px}
-th,td{text-align:left;vertical-align:top;padding:9px 8px;border-bottom:1px solid var(--line)}
-th{font-size:14px;color:var(--muted);font-weight:600;border-bottom:2px solid var(--ink)}
-td:first-child{font-family:Ubuntu,sans-serif;font-weight:700;white-space:nowrap}
-.ok{font-weight:700}
-.ko{font-weight:700;color:var(--no)}
-details{border-top:1px solid var(--line);padding-top:10px}
+#tri .corner[aria-pressed=false]{border-style:dashed;color:var(--muted)}
+.res{background:var(--panel);border-radius:14px;padding:14px 16px;display:grid;gap:4px;min-height:118px}
+.res b{font-family:Ubuntu,sans-serif;font-size:21px}
+.keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.keys div{border-radius:14px;padding:16px;display:grid;gap:6px;align-content:start}
+.keys .them{border:2px solid var(--ink)}
+.keys .me{background:var(--or);color:#17140f}
+.keys b{font-family:Ubuntu,sans-serif;font-size:20px;line-height:1.15}
+.keys span{font-size:16px}
+.ways{display:grid;gap:8px}
+.ways div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 12px;align-items:baseline;border-bottom:1px solid var(--line);padding:6px 0;line-height:1.35}
+.ways b{font-family:Ubuntu,sans-serif;font-size:21px}
+.ways em{font-style:normal;font-weight:700;white-space:nowrap;font-size:16px}
+.ways span{grid-column:1/-1;font-size:16px;color:var(--muted)}
+.end{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center}
+.end i{font-style:normal;width:46px;height:46px;border-radius:50%;background:#17140f;color:var(--or);display:grid;place-items:center;font-family:Ubuntu,sans-serif;font-weight:700;font-size:24px}
+details{font-size:14px}
 summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
-.src{margin:0;padding-left:1.1em;display:grid;gap:4px;font-size:14px}
-.src a{overflow-wrap:anywhere}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-/* Navigation du bas */
-.bot{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));border-top:1px solid var(--line);background:var(--bg)}
+.src{margin:0;padding-left:1.1em;display:grid;gap:4px}
+.src a{color:#17140f;overflow-wrap:anywhere}
+.bot{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));border-top:1px solid var(--line)}
 .bot button{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;font-size:16px;cursor:pointer;padding:0 14px}
-#next{background:var(--ink);color:var(--bg);border-color:var(--ink);justify-self:end;min-width:9em}
 #prev{justify-self:start;min-width:6.5em}
+#next{justify-self:end;min-width:9em;background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .bot button:disabled{opacity:.35;cursor:default}
 #count{font-family:Ubuntu,sans-serif;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:600px){
+.slide{padding-top:16px;padding-bottom:16px}
+.in{gap:16px}
+.txt{gap:10px}
+h2{font-size:29px}
+.when{font-size:17px}
+.big,.post .b{font-size:17px;line-height:1.42}
+.cover h1{font-size:44px}
+.paper{padding:16px 14px}
+.paper b{font-size:20px}
+.paper span{margin-top:6px;font-size:15px}
+.props{gap:8px}
+.props div{grid-template-columns:34px minmax(0,1fr);padding:10px 12px;gap:0 12px}
+.props i{width:34px;height:34px;font-size:17px}
+.props b{font-size:18px}
+.props span{font-size:15px;line-height:1.35}
+.pay div{padding:10px 8px}
+.post .b{padding:12px 14px}
+.tl div{padding-bottom:12px}
+#reseau{min-height:200px}
+#tri{min-height:190px}
+.hint{display:none}
+.res{min-height:0;padding:10px 14px}
+.res b{font-size:18px}
+.res p{font-size:15px;line-height:1.4}
+.keys div{padding:12px}
+.keys b{font-size:18px}
+.keys span{font-size:15px;line-height:1.35}
+.ways b{font-size:18px}
+.ways span,.ways em{font-size:15px}
+.end i{width:38px;height:38px;font-size:20px}
+}
+@media (max-width:600px) and (max-height:600px){
+h2{font-size:25px}
+.big,.post .b{font-size:16px}
+.when{font-size:15px}
+.small{font-size:13px}
+#reseau{min-height:170px}
+#tri{min-height:170px}
+.paper{box-shadow:none}
+}
 @media (max-width:420px){.brand .full{display:none}#tabs button{padding:8px 10px;font-size:14px}}
-@media (max-width:600px){table{font-size:13px}th,td{padding:6px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack tr{border-bottom:2px solid var(--ink)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;text-align:right}.stack td::before{content:attr(data-l);font-weight:600;color:var(--muted);text-align:left;font-family:Inter,sans-serif;font-size:13px}.stack td:first-child{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="toprow">
     <div class="brand"><span class="coin" aria-hidden="true">₿</span><span>Bitcoin<span class="full">, de A à B</span></span></div>
-    <nav id="tabs" aria-label="Chapitres">
-      <button type="button" data-ch="satoshi" aria-selected="false">Histoire</button>
-      <button type="button" data-ch="trilemme" aria-selected="false">Trilemme</button>
+    <nav id="tabs" aria-label="Parties">
+      <button type="button" data-ch="histoire" aria-selected="false">Histoire</button>
+      <button type="button" data-ch="limite" aria-selected="false">Limite</button>
       <button type="button" data-ch="acheter" aria-selected="false">Acheter</button>
     </nav>
   </div>
@@ -191,512 +175,178 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 
 <main id="deck" aria-roledescription="diaporama">
 
-<!-- ============ COUVERTURE ============ -->
-<section class="slide cover" data-ch="intro" aria-label="Couverture">
-  <div class="in two">
+<section class="slide cover" data-ch="intro">
+  <div class="in">
     <div class="txt">
-      <h1>Bitcoin, de Satoshi à nous</h1>
-      <p class="lead">Comment un inconnu a créé Bitcoin, pourquoi il l'a perdu, la limite de la technologie, et comment en acheter.</p>
-      <p class="small">Glisse vers la gauche, ou touche un chapitre. Chaque petit bloc en haut est une diapo : la barre de progression est une chaîne de blocs.</p>
+      <h1>Bitcoin, l'essentiel</h1>
+      <p class="big">Qui l'a créé, pourquoi personne ne peut l'arrêter, et comment en acheter.</p>
+      <p class="small">Glisse vers la gauche pour avancer.</p>
     </div>
-    <div class="chapters">
-      <button type="button" data-go="satoshi"><span class="n">1</span><strong>L'histoire</strong><span>De Satoshi à la communauté, en passant par WikiLeaks</span></button>
-      <button type="button" data-go="trilemme"><span class="n">2</span><strong>Le trilemme</strong><span>La limite physique de toute blockchain</span></button>
-      <button type="button" data-go="acheter"><span class="n">3</span><strong>Acheter</strong><span>Revolut, Trade Republic, Bitstack, Kraken : du vrai bitcoin ou pas ?</span></button>
+    <div class="parts">
+      <button type="button" data-go="histoire"><span class="n">1</span>L'histoire</button>
+      <button type="button" data-go="limite"><span class="n">2</span>La limite</button>
+      <button type="button" data-go="acheter"><span class="n">3</span>Acheter</button>
     </div>
   </div>
 </section>
 
-<!-- ============ CHAPITRE 1 ============ -->
-<section class="slide cover" data-ch="satoshi" aria-label="Chapitre 1">
-  <div class="in two">
+<section class="slide" data-ch="histoire">
+  <div class="in">
     <div class="txt">
-      <p class="num">1</p>
-      <h2>L'histoire : de Satoshi à la communauté</h2>
+      <p class="when">2008</p>
+      <h2>Un inconnu invente Bitcoin</h2>
+      <p class="big">Il signe <b>Satoshi Nakamoto</b> et publie un document de 9 pages, le «&nbsp;livre blanc&nbsp;». Son idée&nbsp;: de l'argent sur Internet, <b>sans banque</b>.</p>
+      <p class="small">On ne sait toujours pas qui il est.</p>
     </div>
-    <div class="ab">
-      <span class="pt">A</span><p class="lead"><b>2008.</b> Un inconnu crée Bitcoin. Il écrit le code, il décide, il corrige.</p>
-      <span class="pt">B</span><p class="lead"><b>Aujourd'hui.</b> Bitcoin n'a plus de chef. Même si Satoshi revenait, il ne pourrait pas le reprendre.</p>
+    <div class="paper" aria-label="Le titre du livre blanc">
+      <b>Bitcoin: A Peer-to-Peer Electronic Cash System</b>
+      <span>Satoshi Nakamoto</span>
+      <span style="font-family:Inter,sans-serif;font-size:15px;color:#5d564c">«&nbsp;Un système d'argent électronique de personne à personne&nbsp;»</span>
     </div>
   </div>
 </section>
 
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
+<section class="slide" data-ch="histoire">
+  <div class="in">
     <div class="txt">
-      <p class="when">31 octobre 2008</p>
-      <h2>Un inconnu publie 9 pages</h2>
-      <p>En pleine crise financière, quelqu'un qui signe <b>Satoshi Nakamoto</b> annonce sur une liste de diffusion de cryptographes un document de 9 pages, publié sur bitcoin.org, enregistré deux mois plus tôt. L'idée&nbsp;: envoyer de l'argent sur Internet <b>sans banque au milieu</b>.</p>
-      <p class="small">Aujourd'hui encore, personne ne sait qui est Satoshi&nbsp;: une personne ou un groupe.</p>
+      <h2>Ce que Bitcoin propose</h2>
+      <p class="big">Un réseau d'argent qui n'appartient à personne.</p>
     </div>
-    <div class="paper" aria-label="En-tête du livre blanc de Bitcoin">
-      <p class="t">Bitcoin: A Peer-to-Peer Electronic Cash System</p>
-      <p class="a">Satoshi Nakamoto</p>
-      <p class="m">satoshin@gmx.com<br>www.bitcoin.org</p>
-      <p class="abs"><b>Abstract.</b> A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution.</p>
-      <p class="small" style="margin-top:10px;font-family:Inter,sans-serif">Traduction&nbsp;: «&nbsp;Une version purement pair à pair de l'argent électronique permettrait d'envoyer des paiements en ligne directement d'une personne à une autre, sans passer par une institution financière.&nbsp;»</p>
+    <div class="props">
+      <div><i>1</i><b>Sans chef</b><span>Des milliers d'ordinateurs tiennent le même registre. Pas de banque au milieu.</span></div>
+      <div><i>2</i><b>Incensurable</b><span>Personne ne peut bloquer ton paiement ni geler ton compte.</span></div>
+      <div><i>3</i><b>Limité</b><span>21 millions de bitcoins au maximum. Personne ne peut en imprimer plus.</span></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">3 janvier 2009</p>
-      <h2>Le bloc n°&nbsp;0</h2>
-      <p>Satoshi lance le réseau. Dans le tout premier bloc, il grave le titre du journal <i>The Times</i> du jour&nbsp;: «&nbsp;Le ministre des Finances au bord d'un second sauvetage des banques&nbsp;».</p>
-      <p>C'est une preuve de date. Beaucoup y lisent aussi un message&nbsp;: Bitcoin naît en pleine crise, pendant que l'État sauve les banques.</p>
-    </div>
-    <div class="blk" aria-label="Le bloc 0 de Bitcoin">
-      <div class="h"><span>Bloc n°&nbsp;0</span><span>3 janv. 2009, 18:15 UTC</span></div>
-      <div class="b">
-        <p class="small">Message gravé à l'intérieur&nbsp;:</p>
-        <p class="msg">The Times 03/Jan/2009 Chancellor on brink of second bailout for banks</p>
-        <p class="small">Empreinte du bloc&nbsp;: <span class="mono">000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">12 janvier 2009 → 22 mai 2010</p>
-      <h2>Un jouet pour passionnés</h2>
-      <p><b>12 janvier 2009</b>&nbsp;: premier paiement. Satoshi envoie 10 bitcoins à Hal Finney, un cryptographe.</p>
-      <p><b>22 mai 2010</b>&nbsp;: Laszlo Hanyecz paie <b>deux pizzas 10&nbsp;000 bitcoins</b>. C'est le premier achat connu d'un objet réel. Le 22 mai est devenu le «&nbsp;Bitcoin Pizza Day&nbsp;».</p>
-    </div>
-    <div class="kpis" aria-label="Chiffres clés">
-      <div class="kpi"><b>10 BTC</b><span>Satoshi → Hal Finney</span></div>
-      <div class="kpi"><b>10&nbsp;000 BTC</b><span>pour 2 pizzas</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">15 août 2010</p>
-      <h2>Un bug, et Satoshi répare</h2>
-      <p>Une faille permet à quelqu'un de créer <b>plus de 184 milliards de bitcoins</b> d'un coup. Satoshi donne l'alerte, publie une correction le soir même, et la bonne chaîne reprend le dessus.</p>
-      <p>À ce moment-là, Satoshi est encore <b>le chef</b>&nbsp;: c'est lui qui écrit le code, décide et corrige. Dix jours plus tard, il ajoute même une «&nbsp;clé d'alerte&nbsp;» pour pouvoir prévenir tous les utilisateurs d'un coup.</p>
-    </div>
-    <div class="blk" aria-label="Le bloc du bug">
-      <div class="h"><span>Bloc n°&nbsp;74&nbsp;638</span><span>15 août 2010</span></div>
-      <div class="b">
-        <p class="small">Montant créé par erreur&nbsp;:</p>
-        <p class="msg">184&nbsp;467&nbsp;440&nbsp;737,095 BTC</p>
-        <p class="stamp">Annulé</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
+<section class="slide" data-ch="histoire">
+  <div class="in">
     <div class="txt">
       <p class="when">Décembre 2010</p>
-      <h2>WikiLeaks est coupé de l'argent</h2>
-      <p>WikiLeaks publie des câbles diplomatiques américains. En quelques jours, <b>PayPal, Mastercard et Visa bloquent les dons</b>. Pas de décision de justice&nbsp;: ce sont des entreprises qui décident.</p>
-      <p>Sur le forum Bitcoin, un membre s'enflamme le 4 décembre&nbsp;: <i>«&nbsp;Basically, bring it on&nbsp;»</i> (en gros, qu'ils y viennent&nbsp;!). Encourageons WikiLeaks à utiliser Bitcoin, «&nbsp;je suis prêt à en assumer les risques&nbsp;».</p>
+      <h2>WikiLeaks est banni par les banques</h2>
+      <p class="big">WikiLeaks publie des documents secrets américains. Visa, Mastercard et PayPal coupent ses dons, sans aucun jugement.</p>
+      <p class="big">Toutes les portes se ferment. Sauf une.</p>
     </div>
-    <div style="display:grid;gap:14px">
-      <div class="cut" aria-label="Paiements bloqués">
-        <div><b>PayPal</b><span>3 déc.</span></div>
-        <div><b>Mastercard</b><span>6 déc.</span></div>
-        <div><b>Visa</b><span>7 déc.</span></div>
-      </div>
-      <p class="stamp">Dons bloqués</p>
+    <div class="pay" aria-label="PayPal, Visa et Mastercard bloqués ; Bitcoin ouvert">
+      <div class="x"><b>PayPal</b><span>bloqué</span></div>
+      <div class="x"><b>Visa</b><span>bloqué</span></div>
+      <div class="x"><b>Mastercard</b><span>bloqué</span></div>
+      <div class="ok"><b>Bitcoin</b><span>ouvert</span></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
+<section class="slide" data-ch="histoire">
+  <div class="in">
     <div class="txt">
       <p class="when">5 décembre 2010</p>
       <h2>Satoshi dit non</h2>
-      <p>Le créateur refuse. Bitcoin est trop jeune&nbsp;: l'attention des gouvernements pourrait le tuer dans l'œuf.</p>
+      <p class="big">Sur le forum, des fans veulent que WikiLeaks utilise Bitcoin. Satoshi refuse&nbsp;: Bitcoin est encore trop petit, il a peur que toute cette attention le détruise.</p>
     </div>
-    <figure class="post" style="margin:0">
-      <div class="h"><span class="av">S</span><div><div class="who">satoshi</div><div>Forum Bitcoin, 5 déc. 2010</div></div></div>
-      <div class="b">
-        <p class="fr">«&nbsp;Non, ne dites pas “qu'ils y viennent”. Le projet doit grandir progressivement, pour que le logiciel se renforce en chemin. Je lance cet appel à WikiLeaks&nbsp;: n'essayez pas d'utiliser Bitcoin. Bitcoin est une petite communauté en version bêta, à ses débuts. Vous n'en tireriez que de la menue monnaie, et l'attention que vous attireriez nous détruirait probablement à ce stade.&nbsp;»</p>
-        <p class="en">“No, don't "bring it on". The project needs to grow gradually so the software can be strengthened along the way. I make this appeal to WikiLeaks not to try to use Bitcoin. Bitcoin is a small beta community in its infancy. You would not stand to get more than pocket change, and the heat you would bring would likely destroy us at this stage.”</p>
-      </div>
+    <figure class="post">
+      <div class="h"><span class="av">S</span><div><b>satoshi</b><br>Forum Bitcoin, 5 déc. 2010</div></div>
+      <p class="b">«&nbsp;Je lance cet appel à WikiLeaks&nbsp;: n'essayez pas d'utiliser Bitcoin. […] L'attention que vous attireriez nous détruirait probablement à ce stade.&nbsp;»</p>
     </figure>
   </div>
 </section>
 
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
+<section class="slide" data-ch="histoire">
+  <div class="in">
     <div class="txt">
-      <p class="when">11 décembre 2010</p>
-      <h2>«&nbsp;Le nid de frelons&nbsp;»</h2>
-      <p>Le 10 décembre, le magazine <i>PC World</i> titre&nbsp;: «&nbsp;Le scandale WikiLeaks pourrait-il mener à une nouvelle monnaie virtuelle&nbsp;?&nbsp;» Le lendemain, Satoshi réagit sur le forum.</p>
+      <h2>Satoshi disparaît, Bitcoin continue</h2>
+      <p class="big">Il ne dit jamais pourquoi il part. Mais Bitcoin n'a plus besoin de lui.</p>
     </div>
-    <figure class="post" style="margin:0">
-      <div class="h"><span class="av">S</span><div><div class="who">satoshi</div><div>Forum Bitcoin, 11 déc. 2010</div></div></div>
-      <div class="b">
-        <p class="fr">«&nbsp;Ça aurait été bien d'avoir cette attention dans n'importe quel autre contexte. WikiLeaks a donné un coup de pied dans le nid de frelons, et l'essaim se dirige vers nous.&nbsp;»</p>
-        <p class="en">“It would have been nice to get this attention in any other context. WikiLeaks has kicked the hornet's nest, and the swarm is headed towards us.”</p>
-      </div>
-    </figure>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">12 décembre 2010 → avril 2011</p>
-      <h2>Satoshi disparaît</h2>
-      <p><b>12 décembre 2010</b>&nbsp;: dernier message sur le forum, une simple mise à jour technique. Il n'y reviendra plus.</p>
-      <p><b>19 décembre 2010</b>&nbsp;: Gavin Andresen annonce qu'il prend la gestion du projet, «&nbsp;avec la bénédiction de Satoshi&nbsp;».</p>
-      <p><b>23 avril 2011</b>&nbsp;: dans un e-mail privé au développeur Mike Hearn&nbsp;: «&nbsp;Je suis passé à autre chose. C'est entre de bonnes mains avec Gavin et tout le monde.&nbsp;» Puis plus rien.</p>
-    </div>
-    <div class="box">
-      <div class="fact"><span class="tag">Fait</span><p>Son dernier message public tombe une semaine après son «&nbsp;non&nbsp;» à WikiLeaks.</p></div>
-      <div class="fact"><span class="tag hyp">Hypothèse</span><p>Il serait parti à cause de WikiLeaks. Satoshi ne l'a jamais dit.</p></div>
-      <div class="fact"><span class="tag hyp">Hypothèse</span><p>Autre piste souvent citée&nbsp;: le 27 avril 2011, Gavin annonce qu'il va présenter Bitcoin à la CIA. Mais l'e-mail d'adieu de Satoshi date du 23&nbsp;: le lien est fragile.</p></div>
+    <div class="tl">
+      <div><b>12 déc. 2010</b><p>Dernier message de Satoshi sur le forum.</p></div>
+      <div><b>Avril 2011</b><p>Il écrit à un développeur&nbsp;: «&nbsp;Je suis passé à autre chose.&nbsp;»</p></div>
+      <div><b>Juin 2011</b><p>WikiLeaks accepte les dons en bitcoin. Les banques l'ont banni, Bitcoin l'aide à tenir.</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
+<section class="slide" data-ch="histoire">
+  <div class="in">
     <div class="txt">
-      <p class="when">14 juin 2011</p>
-      <h2>WikiLeaks le fait quand même</h2>
-      <p>Six mois plus tard, Satoshi n'est plus là pour dire non. WikiLeaks annonce qu'il accepte les dons en bitcoin, et Bitcoin continue sans son créateur.</p>
-      <p>En octobre 2017, Julian Assange remercie ironiquement le gouvernement américain pour le blocus bancaire&nbsp;: il les a poussés à investir en bitcoin, avec un rendement de <b>plus de 50&nbsp;000&nbsp;%</b>, selon lui.</p>
-    </div>
-    <div class="verdict">
-      <p class="q">Le créateur avait dit non. Le projet a avancé sans lui.</p>
-      <p class="small">En décembre 2010, c'étaient des membres du forum qui poussaient. WikiLeaks n'a sauté le pas qu'après le départ de Satoshi.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <h2>Satoshi a perdu Bitcoin</h2>
-      <p>Il a confié le code à <b>Gavin Andresen</b> et aux autres développeurs, et le nom de domaine bitcoin.org à plusieurs personnes, pour qu'aucun groupe ne prenne le contrôle.</p>
-      <p>Sa «&nbsp;clé d'alerte&nbsp;» a été désactivée en 2016, jugée trop centralisée, puis rendue publique en 2018. Même Gavin, son successeur, a perdu ses droits sur le code en 2016.</p>
-      <p>Ses bitcoins (environ <b>1,1 million</b> selon les estimations) n'ont jamais bougé&nbsp;: aucun mouvement connu à fin 2026.</p>
-      <div class="box"><b>Et s'il revenait&nbsp;?</b><p>Il pourrait vendre ses bitcoins ou prendre la parole. Mais pas changer les règles&nbsp;: chaque ordinateur du réseau vérifie lui-même les règles et rejette ce qui ne les respecte pas, quel qu'en soit l'auteur.</p></div>
+      <h2>Bitcoin n'a plus de chef</h2>
+      <p class="big">Même si Satoshi revenait, il ne pourrait pas le reprendre. Chaque ordinateur du réseau vérifie les règles lui-même et refuse ce qui ne les respecte pas, même venant de Satoshi.</p>
     </div>
     <div>
-      <div class="fig" id="reseau" role="img" aria-label="Un réseau de nœuds : Satoshi n'est qu'un point parmi les autres"></div>
-      <p class="small">Chaque point est un ordinateur qui vérifie les règles (un «&nbsp;nœud&nbsp;»). Il y en a des milliers. Satoshi n'en est qu'un.</p>
+      <div class="fig" id="reseau" role="img" aria-label="Un réseau d'ordinateurs : Satoshi n'est qu'un point parmi les autres"></div>
+      <p class="small">Chaque point est un ordinateur du réseau. Satoshi n'en est qu'un.</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">2015 → 2017</p>
-      <h2>La preuve&nbsp;: la guerre des blocs</h2>
-      <p>De grandes entreprises et des mineurs veulent agrandir les blocs pour faire plus de paiements. Les utilisateurs refusent, de peur qu'il faille un gros serveur pour vérifier le réseau.</p>
-      <p><b>Qui a gagné&nbsp;?</b> Les utilisateurs. Ni les mineurs, ni les entreprises, ni Satoshi ne commandent&nbsp;: chacun choisit le logiciel qu'il fait tourner.</p>
-    </div>
-    <div class="tl">
-      <div><b>23 mai 2017</b><p>Accord de New York&nbsp;: une cinquantaine d'entreprises, représentant environ 83&nbsp;% du minage, signent pour doubler la taille des blocs (SegWit2x).</p></div>
-      <div><b>1er août 2017</b><p>Des utilisateurs menacent de rejeter les mineurs récalcitrants (UASF). Le même jour, les partisans des gros blocs partent créer leur propre monnaie&nbsp;: Bitcoin Cash.</p></div>
-      <div><b>24 août 2017</b><p>SegWit, la mise à jour voulue par les utilisateurs, est activée.</p></div>
-      <div><b>8 nov. 2017</b><p>Le doublement SegWit2x est abandonné, «&nbsp;faute de consensus suffisant&nbsp;».</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">Depuis</p>
-      <h2>Qui est Satoshi&nbsp;? Toujours personne</h2>
-      <p>Craig Wright a affirmé pendant des années être Satoshi. En 2024, la Haute Cour de Londres a jugé que non, et qu'il avait menti au tribunal. Fin 2024, il a pris 12 mois de prison avec sursis pour avoir recommencé.</p>
-      <p>Des journalistes ont aussi désigné Peter Todd (documentaire HBO, 2024) puis Adam Back (<i>New York Times</i>, avril 2026). Les deux démentent.</p>
-      <p>Le vrai Satoshi pourrait le prouver en une seconde&nbsp;: signer un message avec les clés de ses premiers bitcoins. Personne ne l'a jamais fait.</p>
-    </div>
-    <div class="verdict">
-      <p class="small">Haute Cour de Londres, jugement du 20 mai 2024</p>
-      <p class="q">«&nbsp;Le Dr Wright n'est pas l'auteur du livre blanc de Bitcoin.&nbsp;»</p>
-      <p class="small">Leçon pour un débutant&nbsp;: quelqu'un qui dit «&nbsp;je suis Satoshi&nbsp;» ou qui parle en son nom sans preuve cryptographique ment.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="satoshi">
-  <div class="in two">
-    <div class="txt">
-      <h2>De A à B, en une phrase</h2>
-      <p class="lead">Bitcoin est passé du projet d'une personne à des règles que personne ne contrôle, pas même son créateur.</p>
-    </div>
-    <div class="tl">
-      <div><b>2008</b><p>Satoshi écrit Bitcoin.</p></div>
-      <div><b>2010</b><p>Il le dirige, corrige les bugs, dit non à WikiLeaks.</p></div>
-      <div><b>2011</b><p>Il part. WikiLeaks accepte quand même le bitcoin.</p></div>
-      <div><b>2017</b><p>Les utilisateurs l'emportent face aux entreprises et aux mineurs.</p></div>
-      <div><b>Aujourd'hui</b><p>Même Satoshi ne pourrait pas reprendre la main.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CHAPITRE 2 ============ -->
-<section class="slide cover" data-ch="trilemme" aria-label="Chapitre 2">
-  <div class="in two">
-    <div class="txt">
-      <p class="num">2</p>
-      <h2>La limite&nbsp;: le trilemme de la blockchain</h2>
-    </div>
-    <p class="lead">Toute technologie a une limite physique. Une voiture ne peut pas être à la fois la plus rapide, la plus sûre et la moins chère. Une blockchain non plus.</p>
-  </div>
-</section>
-
-<section class="slide" data-ch="trilemme">
-  <div class="in two">
-    <div class="txt">
-      <h2>Rapide, bon, pas cher&nbsp;: choisis-en deux</h2>
-      <p>En cuisine, tout le monde connaît la règle. Un plat rapide et pas cher ne sera pas le meilleur. Un plat excellent et rapide coûtera cher.</p>
-      <p>Une blockchain a le même problème avec trois qualités. Elle peut en avoir deux pleinement&nbsp;; la troisième en souffre. Vitalik Buterin, le créateur d'Ethereum, l'a formulé en 2017.</p>
-      <p class="small">Pas besoin de retenir les trois mots. Retiens seulement qu'il y a une limite, comme partout.</p>
-    </div>
-    <div class="box" style="gap:12px">
-      <div class="fact"><span class="tag">1</span><p><b>Décentralisé</b>&nbsp;: personne ne commande, n'importe qui peut vérifier.</p></div>
-      <div class="fact"><span class="tag">2</span><p><b>Sûr</b>&nbsp;: impossible de tricher ou de dépenser deux fois.</p></div>
-      <div class="fact"><span class="tag">3</span><p><b>Rapide</b>&nbsp;: beaucoup de paiements par seconde.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="trilemme">
-  <div class="in two trig">
+<section class="slide" data-ch="limite">
+  <div class="in trig">
     <div class="txt" style="grid-area:t">
-      <h2>À toi de choisir deux sommets</h2>
-      <p>Touche un sommet&nbsp;: il remplace le plus ancien des deux choisis.</p>
+      <h2>Rapide, sûr, sans chef&nbsp;: choisis-en deux</h2>
+      <p class="big">Comme en cuisine avec «&nbsp;rapide, bon, pas cher&nbsp;»&nbsp;: on ne peut pas tout avoir. C'est le <b>trilemme</b>.</p>
     </div>
     <div class="res" id="res" aria-live="polite" style="grid-area:r"></div>
     <div class="fig" id="tri" style="grid-area:f">
       <svg id="trisvg" aria-hidden="true"></svg>
-      <button type="button" class="corner" data-k="D" aria-pressed="false"><b>Décentralisé</b><span>personne ne commande</span></button>
-      <button type="button" class="corner" data-k="S" aria-pressed="false"><b>Sûr</b><span>impossible de tricher</span></button>
-      <button type="button" class="corner" data-k="C" aria-pressed="false"><b>Rapide</b><span>beaucoup de paiements</span></button>
+      <button type="button" class="corner" data-k="D" aria-pressed="false">Sans chef</button>
+      <button type="button" class="corner" data-k="S" aria-pressed="false">Sûr</button>
+      <button type="button" class="corner" data-k="C" aria-pressed="false">Rapide</button>
     </div>
   </div>
 </section>
 
-<section class="slide" data-ch="trilemme">
-  <div class="in two">
-    <div class="txt">
-      <h2>Et si on faisait des blocs plus gros&nbsp;?</h2>
-      <p>C'était tout le débat de la guerre des blocs. Plus de paiements, oui&nbsp;; mais il faut une machine plus grosse pour vérifier, donc moins de monde peut le faire.</p>
-      <div class="slider">
-        <label for="taille"><span>Taille des blocs</span><output id="tOut">×1</output></label>
-        <input type="range" id="taille" min="0" max="5" step="1" value="0">
-        <div class="ticks" aria-hidden="true"><span>×1 (aujourd'hui)</span><span>×1&nbsp;500</span></div>
-      </div>
-      <p class="small">Modèle simplifié. Base&nbsp;: un bloc moyen de 1,5&nbsp;Mo toutes les 10 minutes, environ 3&nbsp;200 transactions par bloc (ordre de grandeur 2025).</p>
-    </div>
-    <div style="display:grid;gap:12px">
-      <div class="kpis">
-        <div class="kpi"><b id="kTx">5</b><span>transactions par seconde</span></div>
-        <div class="kpi"><b id="kDay">216 Mo</b><span>à télécharger par jour</span></div>
-        <div class="kpi"><b id="kYear">79 Go</b><span>de données en plus par an</span></div>
-      </div>
-      <div class="box">
-        <span class="small">Pour vérifier soi-même, il faut&nbsp;:</span>
-        <p class="who" id="kMach">Un PC ordinaire</p>
-        <p id="kWho">Presque tout le monde peut vérifier.</p>
-      </div>
-      <div class="meter"><span>Rapide</span><i id="mFast"></i><span>Décentralisé</span><i id="mDec" style="--c:var(--ink)"></i></div>
-      <p class="small">Repère&nbsp;: Visa a traité 257,5 milliards de transactions sur son exercice 2025, soit environ <b>8&nbsp;000 par seconde</b> en moyenne.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="trilemme">
-  <div class="in two">
-    <div class="txt">
-      <h2>La solution de Bitcoin&nbsp;: des étages</h2>
-      <p>Bitcoin garde une base lente mais solide, que tout le monde peut vérifier. La vitesse se fait <b>au-dessus</b>, avec le réseau <b>Lightning</b>.</p>
-      <p>C'est comme l'ardoise au bar&nbsp;: on note chaque consommation, et on ne passe en caisse qu'une fois à la fin. Sur Lightning, les paiements sont instantanés et coûtent quelques centimes ou moins&nbsp;; seuls l'ouverture et le règlement final passent par la chaîne Bitcoin.</p>
-      <div class="box"><b>À retenir</b><p>Il n'y a pas de technologie magique. Bitcoin a choisi&nbsp;: lent à la base, mais sans chef.</p></div>
-    </div>
-    <div class="slate" aria-label="Exemple d'ardoise">
-      <div><span>Café</span><span>2,00 €</span></div>
-      <div><span>Café</span><span>2,00 €</span></div>
-      <div><span>Croissant</span><span>1,50 €</span></div>
-      <div><span>Café</span><span>2,00 €</span></div>
-      <div><span>Jus d'orange</span><span>3,50 €</span></div>
-      <div class="tot"><span>Réglé en une fois</span><span>11,00 €</span></div>
-      <p style="font-size:14px;color:#c9cdc6;margin-top:6px">5 paiements sur Lightning, 1 seul passage par la chaîne.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CHAPITRE 3 ============ -->
-<section class="slide cover" data-ch="acheter" aria-label="Chapitre 3">
-  <div class="in two">
-    <div class="txt">
-      <p class="num">3</p>
-      <h2>Acheter&nbsp;: du vrai bitcoin… ou pas&nbsp;?</h2>
-    </div>
-    <p class="lead">Revolut, Trade Republic, Bitstack, Kraken&nbsp;: quatre styles de plateformes. La vraie question n'est pas seulement le prix, c'est&nbsp;: <b>qui a les clés&nbsp;?</b></p>
-  </div>
-</section>
-
-<section class="slide" data-ch="acheter">
-  <div class="in two">
-    <div class="txt">
-      <h2>Du vrai bitcoin, ou une promesse&nbsp;?</h2>
-      <p>Quand tu achètes sur une plateforme, elle garde les bitcoins pour toi. Tu as une ligne dans son tableau, comme un solde à la banque.</p>
-      <p>Pour qu'ils soient vraiment à toi, il faut les <b>retirer vers ton propre portefeuille</b>. C'est alors toi qui as les clés, sous la forme d'une liste de 12 ou 24 mots.</p>
-      <p class="small">Le dicton des bitcoiners&nbsp;: «&nbsp;Not your keys, not your coins&nbsp;» (pas tes clés, pas tes bitcoins).</p>
-    </div>
-    <div class="tl ladder">
-      <div><b>Niveau 1 · Exposition</b><p>Un produit financier qui suit le prix (ETP, CFD…). Tu n'as aucun bitcoin&nbsp;: tu ne peux pas en envoyer ni en retirer.</p></div>
-      <div><b>Niveau 2 · Gardé par la plateforme</b><p>Le bitcoin existe, mais c'est elle qui a les clés. Si elle bloque les retraits ou fait faillite, tu attends. Exemple&nbsp;: FTX, novembre 2022.</p></div>
-      <div><b>Niveau 3 · Dans ton portefeuille</b><p>Tu as les clés&nbsp;: personne ne peut bloquer ton argent. Mais si tu perds tes 12 mots, personne ne peut t'aider.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="acheter">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">Style 1 · La néobanque</p>
-      <h2>Revolut</h2>
-      <p class="lead">Le plus simple si tu as déjà le compte&nbsp;: le bitcoin s'achète en trois clics, à côté de tes euros.</p>
-      <div class="flow" aria-label="retrait possible"><span>Revolut garde</span><em>retrait possible</em><span class="me">Ton portefeuille</span></div>
-      <p class="prof">Pour qui&nbsp;: celui qui a déjà Revolut et veut essayer sans ouvrir un nouveau compte.</p>
-    </div>
-    <dl class="sheet"><dt>Frais d'achat</dt><dd>1,49&nbsp;% (formules Standard et Plus), 0,99&nbsp;% (Premium, Metal), 0,49&nbsp;% (Ultra). En plus, un écart de prix est inclus dans le cours affiché. Sur les petits achats, un frais minimum s'applique&nbsp;: regarde le total avant de valider.</dd><dt>Achat programmé</dt><dd>Oui, et arrondi des paiements par carte.</dd><dt>Vers ton portefeuille</dt><dd>Oui, sur la chaîne Bitcoin&nbsp;: 3&nbsp;€ + frais du réseau.</dd><dt>Agrément</dt><dd>MiCA, délivré à Chypre (CySEC) en 2025.</dd><dt>Cryptos</dt><dd>Des centaines, pas seulement le bitcoin.</dd><dt>Impôts</dt><dd>La partie crypto est gérée depuis Chypre&nbsp;: compte à déclarer (formulaire 3916-bis).</dd></dl>
-  </div>
-</section>
-<section class="slide" data-ch="acheter">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">Style 2 · Le néocourtier</p>
-      <h2>Trade Republic</h2>
-      <p class="lead">Une appli de bourse&nbsp;: actions, ETF… et bitcoin. Pratique pour investir un peu chaque mois.</p>
-      <div class="flow" aria-label="via le Crypto Wallet"><span>Trade Republic garde</span><em>via le Crypto Wallet</em><span class="me">Ton portefeuille</span></div>
-      <p class="prof">Pour qui&nbsp;: celui qui investit déjà en bourse et veut un peu de bitcoin à côté.</p>
-    </div>
-    <dl class="sheet"><dt>Frais d'achat</dt><dd>1&nbsp;€ par ordre, plus un écart de prix non publié.</dd><dt>Achat programmé</dt><dd>Plan d'épargne dès 1&nbsp;€, sans frais d'ordre. L'arrondi, lui, n'investit pas en bitcoin.</dd><dt>Vers ton portefeuille</dt><dd>Oui depuis novembre 2025, via le «&nbsp;Crypto Wallet&nbsp;» de l'appli (cryptos gardées par BitGo). Une ancienne page d'aide dit encore le contraire&nbsp;: vérifie dans l'appli.</dd><dt>Agrément</dt><dd>MiCA, délivré en Allemagne (BaFin) en 2025.</dd><dt>Cryptos</dt><dd>Une cinquantaine.</dd><dt>Impôts</dt><dd>Établissement allemand&nbsp;: compte crypto à déclarer (3916-bis), à confirmer selon ta situation.</dd></dl>
-  </div>
-</section>
-<section class="slide" data-ch="acheter">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">Style 3 · L'appli 100&nbsp;% bitcoin</p>
-      <h2>Bitstack</h2>
-      <p class="lead">Une appli française qui ne fait que du bitcoin, pensée pour épargner petit à petit.</p>
-      <div class="flow" aria-label="retrait possible"><span>Bitstack garde</span><em>retrait possible</em><span class="me">Ton portefeuille</span></div>
-      <p class="prof">Pour qui&nbsp;: le débutant qui veut épargner en bitcoin, sans tentation d'acheter autre chose.</p>
-    </div>
-    <dl class="sheet"><dt>Frais d'achat</dt><dd>1,5&nbsp;% sous 250&nbsp;€ par mois, 1,25&nbsp;% jusqu'à 1&nbsp;000&nbsp;€, puis 1&nbsp;%. Formule Plus (2,99&nbsp;€/mois)&nbsp;: 0,75&nbsp;%. Paiement par carte&nbsp;: +0,70&nbsp;%.</dd><dt>Achat programmé</dt><dd>Oui, et arrondis des dépenses en bitcoin (prélevés chaque semaine).</dd><dt>Vers ton portefeuille</dt><dd>Oui, sur la chaîne Bitcoin, dès 10&nbsp;000 sats. Gratuit en vitesse standard à partir de 50&nbsp;000 sats. Pas de Lightning.</dd><dt>Agrément</dt><dd>MiCA, délivré par l'AMF le 30 juin 2025.</dd><dt>Cryptos</dt><dd>Le bitcoin uniquement.</dd><dt>Impôts</dt><dd>Société française&nbsp;: pas de 3916-bis à faire pour ce compte.</dd></dl>
-  </div>
-</section>
-<section class="slide" data-ch="acheter">
-  <div class="in two">
-    <div class="txt">
-      <p class="when">Style 4 · La plateforme d'échange</p>
-      <h2>Kraken</h2>
-      <p class="lead">Une vraie bourse crypto, parmi les plus anciennes (2011). Plus de réglages, et moins cher si on utilise la version avancée.</p>
-      <div class="flow" aria-label="retrait + Lightning"><span>Kraken garde</span><em>retrait + Lightning</em><span class="me">Ton portefeuille</span></div>
-      <p class="prof">Pour qui&nbsp;: celui qui veut payer moins de frais et accepte une interface plus technique.</p>
-    </div>
-    <dl class="sheet"><dt>Frais d'achat</dt><dd>Achat simple dans l'appli&nbsp;: 1&nbsp;% + écart de prix. Version avancée (Kraken Pro)&nbsp;: nettement moins, selon ton volume et ce que tu détiens (grille revue le 9 juillet 2026).</dd><dt>Achat programmé</dt><dd>Oui dans l'appli (1&nbsp;% + écart). Pas d'arrondis.</dd><dt>Vers ton portefeuille</dt><dd>Oui, sur la chaîne Bitcoin et en Lightning.</dd><dt>Dépôt</dt><dd>Virement SEPA gratuit. Carte bancaire chère&nbsp;: 3,75&nbsp;% + 0,25&nbsp;€.</dd><dt>Agrément</dt><dd>MiCA, délivré en Irlande (Banque centrale) le 25 juin 2025.</dd><dt>Impôts</dt><dd>Établissement irlandais&nbsp;: compte à déclarer (3916-bis).</dd></dl>
-  </div>
-</section>
 <section class="slide" data-ch="acheter">
   <div class="in">
-    <div class="txt" style="max-width:none">
-      <h2>Les quatre côte à côte</h2>
-      <p class="small">Frais pour un achat simple, hors écart de prix. Situation au 26 novembre 2026&nbsp;: les grilles changent souvent.</p>
+    <div class="txt">
+      <h2>Qui a les clés&nbsp;?</h2>
+      <p class="big">Sur une appli, c'est elle qui garde tes bitcoins. Pour qu'ils soient vraiment à toi, tu peux les envoyer sur ton propre portefeuille.</p>
+      <p class="small">Le dicton&nbsp;: «&nbsp;Pas tes clés, pas tes bitcoins.&nbsp;»</p>
     </div>
-    <div class="tbl">
-      <table class="stack">
-        <thead><tr><th>Plateforme</th><th>Style</th><th>Frais d'achat</th><th>Retrait vers toi</th><th>Lightning</th><th>Que du bitcoin</th><th>3916-bis</th></tr></thead>
-        <tbody>
-          <tr><td>Revolut</td><td>Néobanque</td><td>0,49 à 1,49&nbsp;%</td><td class="ok">Oui</td><td>Non confirmé en France</td><td class="ko">Non</td><td>Oui</td></tr>
-          <tr><td>Trade Republic</td><td>Néocourtier</td><td>1&nbsp;€ par ordre</td><td class="ok">Oui, via le Wallet</td><td>Non annoncé</td><td class="ko">Non</td><td>Oui, a priori</td></tr>
-          <tr><td>Bitstack</td><td>Appli bitcoin</td><td>0,75 à 1,5&nbsp;%</td><td class="ok">Oui</td><td class="ko">Non</td><td class="ok">Oui</td><td>Non</td></tr>
-          <tr><td>Kraken</td><td>Plateforme d'échange</td><td>1&nbsp;% (Pro&nbsp;: moins)</td><td class="ok">Oui</td><td class="ok">Oui</td><td class="ko">Non</td><td>Oui</td></tr>
-        </tbody>
-      </table>
+    <div class="keys">
+      <div class="them"><b>Sur l'appli</b><span>Simple. Mais si elle bloque ou fait faillite, tu attends.</span></div>
+      <div class="me"><b>Dans ton portefeuille</b><span>À toi seul, avec 12 mots secrets. Perdus&nbsp;= bitcoins perdus.</span></div>
     </div>
-    <p class="small">Les quatre permettent maintenant de retirer de vrais bitcoins. La différence se joue sur la simplicité, les frais, et la tentation d'acheter autre chose que du bitcoin.</p>
   </div>
 </section>
 
 <section class="slide" data-ch="acheter">
-  <div class="in two">
-    <div class="txt">
-      <h2>Quatre réflexes avant d'acheter</h2>
-      <p>Ce que personne ne dit au débutant, et qui coûte cher quand on l'apprend trop tard.</p>
-    </div>
-    <div class="box" style="gap:12px">
-      <div class="fact"><span class="tag">1</span><p><b>L'écart de prix.</b> Compare le prix payé au cours du marché&nbsp;: une partie des frais se cache là, pas dans le pourcentage affiché.</p></div>
-      <div class="fact"><span class="tag">2</span><p><b>L'agrément.</b> Depuis le 1er juillet 2026, une plateforme sans agrément MiCA n'a plus le droit de servir les Français. Les quatre présentées l'ont. Liste blanche sur amf-france.org.</p></div>
-      <div class="fact"><span class="tag">3</span><p><b>Les arnaques.</b> Personne ne «&nbsp;double&nbsp;» tes bitcoins, et aucun service client ne te demandera jamais tes 12 mots.</p></div>
-      <div class="fact"><span class="tag">4</span><p><b>Les impôts.</b> Une plus-value est imposée quand tu revends contre des euros&nbsp;: 31,4&nbsp;% en 2026, si tes ventes de l'année dépassent 305&nbsp;€. Compte à l'étranger&nbsp;: formulaire 3916-bis, sinon 750&nbsp;€ d'amende par compte.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide cover" data-ch="acheter" aria-label="À retenir">
-  <div class="in two">
-    <div class="txt">
-      <h2>Les trois idées à retenir</h2>
-      <p class="small">Vérifié le 26 novembre 2026. Frais et règles bougent souvent&nbsp;: vérifie dans l'appli avant d'acheter.</p>
-    </div>
-    <div class="ab">
-      <span class="pt">1</span><p class="lead"><b>Bitcoin n'a plus de chef.</b> Même Satoshi ne pourrait pas le reprendre.</p>
-      <span class="pt">2</span><p class="lead"><b>Toute blockchain a une limite.</b> Bitcoin a choisi d'être lent à la base mais sans chef&nbsp;; la vitesse se fait au-dessus.</p>
-      <span class="pt">3</span><p class="lead"><b>Acheter, c'est la moitié du chemin.</b> La vraie question&nbsp;: qui a les clés&nbsp;?</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-ch="acheter" aria-label="Sources">
   <div class="in">
-    <div class="txt" style="max-width:none">
-      <h2>Sources</h2>
-      <p class="small">Sources primaires quand elles existent. Les frais et agréments ont été vérifiés le 26 novembre 2026.</p>
+    <div class="txt">
+      <h2>Quatre façons d'acheter</h2>
+      <p class="big">Les quatre sont autorisées en Europe et te laissent retirer tes bitcoins.</p>
     </div>
-    <details open><summary>L'histoire</summary><ul class="src">
-      <li><a href="https://bitcoin.org/bitcoin.pdf">Le livre blanc de Bitcoin</a> et <a href="http://www.metzdowd.com/pipermail/cryptography/2008-October/014810.html">son annonce du 31 octobre 2008</a></li>
-      <li><a href="https://github.com/bitcoin/bitcoin/blob/master/src/kernel/chainparams.cpp">Le bloc 0 dans le code de Bitcoin</a></li>
-      <li><a href="https://bitcointalk.org/index.php?topic=827.msg9590#msg9590">Le bug du 15 août 2010 (message de Satoshi)</a></li>
-      <li><a href="https://bitcointalk.org/index.php?topic=1735.msg26999#msg26999">« No, don't bring it on » (5 déc. 2010)</a> et <a href="https://satoshi.nakamotoinstitute.org/posts/bitcointalk/542/">le nid de frelons (11 déc. 2010)</a></li>
-      <li><a href="https://satoshi.nakamotoinstitute.org/posts/bitcointalk/543/">Dernier message de Satoshi sur le forum</a> et <a href="https://bitcointalk.org/index.php?topic=2367.msg31651">Gavin prend la gestion du projet</a></li>
-      <li><a href="https://cointelegraph.com/news/satoshi-nakamoto-final-email-revisited-after-13-years">L'e-mail d'avril 2011 à Mike Hearn</a></li>
-      <li><a href="https://www.coindesk.com/assange-bitcoin-wikileaks-helped-keep-alive">WikiLeaks et le bitcoin (2011)</a> et <a href="https://www.theregister.com/2017/10/16/assange_thanks_usa_for_forcing_him_to_invest_in_bitcoin/">le message d'Assange (2017)</a></li>
-      <li><a href="https://bitcoin.org/en/alert/2016-11-01-alert-retirement">Fin de la clé d'alerte</a>, <a href="https://bitcoin.org/en/posts/alert-key-and-vulnerabilities-disclosure">sa publication (2018)</a> et <a href="https://bitcoin.org/en/posts/ten-year-anniversary">le domaine bitcoin.org</a></li>
-      <li><a href="https://www.coindesk.com/markets/2017/11/08/2x-called-off-bitcoin-hard-fork-suspended-for-lack-of-consensus">Abandon de SegWit2x (8 nov. 2017)</a></li>
-      <li><a href="https://caselaw.nationalarchives.gov.uk/ewhc/ch/2024/1198">Jugement COPA contre Wright (2024)</a> et <a href="https://caselaw.nationalarchives.gov.uk/ewhc/ch/2024/3316">sa condamnation (déc. 2024)</a></li>
-      <li><a href="https://www.cnbc.com/2026/04/08/latest-investigation-of-bitcoin-founder-ties-identity-to-blockstream-ceo-adam-back.html">L'enquête du New York Times sur Adam Back (avril 2026)</a></li>
-    </ul></details>
-    <details open><summary>Le trilemme</summary><ul class="src">
-      <li><a href="https://vitalik.eth.limo/general/2017/12/31/sharding_faq.html">Vitalik Buterin, Sharding FAQ (2017)</a></li>
-      <li><a href="https://annualreport.visa.com/financials">Visa, rapport annuel 2025</a></li>
-      <li><a href="https://coinledger.io/research/bitcoin-blockchain-size-and-growth-over-time">Taille des blocs et de la chaîne (2025)</a></li>
-      <li><a href="https://www.theblock.co/news/ecosystems/2020-08-06-ethereum-classic-another-51-attack-74130">Attaques à 51 % sur Ethereum Classic (2020)</a></li>
-    </ul></details>
-    <details open><summary>Acheter</summary><ul class="src">
-      <li>Revolut&nbsp;: <a href="https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/">frais crypto</a>, <a href="https://help.revolut.com/en-DE/help/wealth/cryptocurrencies/understanding-revolut-cryptocurrency/crypto-safety/who-provides-revolut-s-crypto-services/">agrément MiCA</a></li>
-      <li>Trade Republic&nbsp;: <a href="https://support.traderepublic.com/fr-fr/1461-Quels-sont-les-frais-de-courtage-des-crypto_monnaies-">frais crypto</a>, <a href="https://assets.traderepublic.com/assets/files/251114_TradeRepublic_Crypto_PressRelease_FR_FR_3.pdf">Crypto Wallet (nov. 2025)</a></li>
-      <li>Bitstack&nbsp;: <a href="https://www.bitstack-app.com/en-FR/pricing">tarifs</a>, <a href="https://help.bitstack-app.com/en/articles/11070222-what-are-the-bitcoin-withdrawal-fees">retraits</a>, <a href="https://www.amf-france.org/fr/espace-epargnants/proteger-son-epargne/listes-blanches/psca/bitstack-digital-assets-sas">agrément AMF</a></li>
-      <li>Kraken&nbsp;: <a href="https://www.kraken.com/features/fee-schedule">frais</a>, <a href="https://support.kraken.com/articles/cross-platform-fee-tier-changes">nouvelle grille (juillet 2026)</a>, <a href="https://support.kraken.com/articles/360000381846-cash-deposit-options-fees-minimums-and-processing-times-">dépôts</a></li>
-      <li><a href="https://www.amf-france.org/fr/actualites-publications/communiques/communiques-de-lamf/crypto-actifs-la-fin-de-la-periode-de-transition-entre-la-loi-pacte-et-le-reglement-europeen-mica">AMF&nbsp;: fin de la période de transition MiCA</a></li>
-      <li><a href="https://www.impots.gouv.fr/particulier/questions/comment-declarer-les-plus-ou-moins-values-sur-cessions-dactifs-numeriques">impots.gouv.fr&nbsp;: plus-values sur actifs numériques</a></li>
-    </ul></details>
+    <div class="ways">
+      <div><b>Revolut</b><em>≈&nbsp;1,5&nbsp;%</em><span>La banque en ligne. Le plus simple si tu l'as déjà.</span></div>
+      <div><b>Trade Republic</b><em>1&nbsp;€ par achat</em><span>L'appli de bourse. Pratique pour un peu chaque mois.</span></div>
+      <div><b>Bitstack</b><em>1 à 1,5&nbsp;%</em><span>Appli française 100&nbsp;% bitcoin, faite pour épargner.</span></div>
+      <div><b>Kraken</b><em>≈&nbsp;1&nbsp;%</em><span>La plateforme d'échange. Plus technique, moins chère en mode Pro.</span></div>
+      <p class="small" style="margin-top:4px">Frais d'achat au 26 novembre 2026, sans compter l'écart de prix. Vérifie dans l'appli avant d'acheter.</p>
+    </div>
   </div>
 </section>
 
-
+<section class="slide cover" data-ch="acheter">
+  <div class="in">
+    <div class="txt">
+      <h2>À retenir</h2>
+    </div>
+    <div style="display:grid;gap:16px">
+      <div class="end"><i>1</i><p class="big"><b>Satoshi a créé Bitcoin</b>, puis il est parti. Bitcoin n'a plus de chef.</p></div>
+      <div class="end"><i>2</i><p class="big"><b>Quand les banques te bannissent</b>, Bitcoin reste ouvert. WikiLeaks l'a prouvé.</p></div>
+      <div class="end"><i>3</i><p class="big"><b>Toute technologie a une limite.</b> Bitcoin a choisi d'être lent mais sans chef.</p></div>
+      <details>
+        <summary>Sources</summary>
+        <ul class="src">
+          <li><a href="https://bitcoin.org/bitcoin.pdf">Le livre blanc de Bitcoin (2008)</a></li>
+          <li><a href="https://bitcointalk.org/index.php?topic=1735.msg26999#msg26999">Le message de Satoshi sur WikiLeaks (5 déc. 2010)</a></li>
+          <li><a href="https://satoshi.nakamotoinstitute.org/posts/bitcointalk/543/">Son dernier message sur le forum (12 déc. 2010)</a></li>
+          <li><a href="https://www.coindesk.com/assange-bitcoin-wikileaks-helped-keep-alive">WikiLeaks accepte le bitcoin (2011)</a></li>
+          <li><a href="https://vitalik.eth.limo/general/2017/12/31/sharding_faq.html">Le trilemme, par Vitalik Buterin (2017)</a> et <a href="https://annualreport.visa.com/financials">Visa, rapport 2025</a></li>
+          <li>Frais&nbsp;: <a href="https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/">Revolut</a>, <a href="https://support.traderepublic.com/fr-fr/1461-Quels-sont-les-frais-de-courtage-des-crypto_monnaies-">Trade Republic</a>, <a href="https://www.bitstack-app.com/en-FR/pricing">Bitstack</a>, <a href="https://www.kraken.com/features/fee-schedule">Kraken</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</section>
 
 </main>
 
@@ -717,10 +367,6 @@ const prev = document.getElementById('prev');
 const next = document.getElementById('next');
 const tabs = [...document.querySelectorAll('#tabs button')];
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-document.querySelectorAll('table.stack').forEach((t) => {
-  const heads = [...t.rows[0].cells].map((c) => c.textContent);
-  [...t.tBodies[0].rows].forEach((r) => [...r.cells].forEach((c, i) => { c.dataset.l = heads[i] || ''; }));
-});
 chain.style.gridTemplateColumns = `repeat(${N},minmax(0,1fr))`;
 chain.innerHTML = slides.map((s, i) => `<button type="button" data-i="${i}" aria-label="Diapo ${i + 1} sur ${N}"></button>`).join('');
 const blocks = [...chain.children];
@@ -774,23 +420,20 @@ const start = firstOf(location.hash.slice(1) || 'intro');
 set(start);
 requestAnimationFrame(() => { deck.scrollLeft = start * deck.clientWidth; });
 
-/* Réseau de nœuds : Satoshi n'est qu'un point */
+/* Réseau : Satoshi n'est qu'un point parmi les autres */
 const net = document.getElementById('reseau');
 function drawNet() {
   const W = net.clientWidth, H = net.clientHeight;
   if (!W || !H) return;
   let seed = 7;
   const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
-  const named = [
-    { x: .30, y: .36, t: 'Satoshi' }, { x: .70, y: .66, t: 'toi' },
-    { x: .16, y: .80, t: 'un mineur' }, { x: .66, y: .18, t: 'une entreprise' }
-  ].map((n) => ({ ...n, x: n.x * W, y: n.y * H }));
+  const named = [{ x: .28, y: .38, t: 'Satoshi' }, { x: .68, y: .68, t: 'toi' }].map((n) => ({ ...n, x: n.x * W, y: n.y * H }));
   const pts = named.slice();
   let guard = 0;
-  while (pts.length < 52 && guard++ < 4000) {
+  while (pts.length < 44 && guard++ < 4000) {
     const p = { x: 12 + rnd() * (W - 24), y: 12 + rnd() * (H - 24) };
-    const clash = pts.some((q) => (q.x - p.x) ** 2 + (q.y - p.y) ** 2 < 26 ** 2) ||
-      named.some((n) => p.x > n.x - 12 && p.x < n.x + n.t.length * 9 + 22 && p.y > n.y - 16 && p.y < n.y + 14);
+    const clash = pts.some((q) => (q.x - p.x) ** 2 + (q.y - p.y) ** 2 < 28 ** 2) ||
+      named.some((n) => p.x > n.x - 12 && p.x < n.x + n.t.length * 10 + 22 && p.y > n.y - 16 && p.y < n.y + 14);
     if (!clash) pts.push(p);
   }
   const edges = new Set();
@@ -800,7 +443,7 @@ function drawNet() {
   });
   const lines = [...edges].map((e) => { const [a, b] = e.split('-').map(Number); return `<line x1="${pts[a].x}" y1="${pts[a].y}" x2="${pts[b].x}" y2="${pts[b].y}"/>`; }).join('');
   const dots = pts.map((p, i) => `<circle cx="${p.x}" cy="${p.y}" r="7" fill="${i === 0 ? 'var(--or)' : 'var(--ink)'}"/>`).join('');
-  const labels = named.map((n) => `<text x="${n.x + 12}" y="${n.y + 5}" font-size="15" font-weight="700" fill="var(--ink)">${n.t}</text>`).join('');
+  const labels = named.map((n) => `<text x="${n.x + 12}" y="${n.y + 6}" font-size="17" font-weight="700" fill="var(--ink)">${n.t}</text>`).join('');
   net.innerHTML = `<svg viewBox="0 0 ${W} ${H}"><g stroke="var(--line)" stroke-width="2">${lines}</g>${dots}${labels}</svg>`;
 }
 const netObs = new ResizeObserver(drawNet);
@@ -811,76 +454,38 @@ const tri = document.getElementById('tri');
 const svg = document.getElementById('trisvg');
 const res = document.getElementById('res');
 const corners = [...tri.querySelectorAll('.corner')];
-const NAMES = { D: 'Décentralisé', S: 'Sûr', C: 'Rapide' };
 const COMBOS = {
-  DS: { short: 'Bitcoin', title: 'Décentralisé + sûr = Bitcoin', text: 'Des milliers d’ordinateurs vérifient tout, personne ne peut bloquer un paiement. Le prix à payer : environ 5 transactions par seconde sur la chaîne principale, un bloc toutes les 10 minutes environ.' },
-  CS: { short: 'Visa, banques', title: 'Sûr + rapide = Visa, une banque', text: 'Visa traite environ 8 000 transactions par seconde en moyenne. Mais une entreprise commande : elle peut bloquer qui elle veut. C’est exactement ce qui est arrivé à WikiLeaks en 2010.' },
-  CD: { short: 'Chaîne fragile', title: 'Décentralisé + rapide = une chaîne fragile', text: 'Ouverte et rapide, mais peu protégée : l’attaquer coûte peu. Exemple réel : en août 2020, Ethereum Classic a subi plusieurs attaques « à 51 % » ; des millions de dollars ont été dépensés deux fois.' }
+  DS: ['Bitcoin', 'Sans chef et sûr, mais lent : quelques paiements par seconde. La vitesse se fait au-dessus, avec Lightning.'],
+  CS: ['Visa, les banques', 'Rapide et sûr : Visa traite environ 8 000 paiements par seconde. Mais il y a un chef, qui peut te bannir. Demande à WikiLeaks.'],
+  CD: ['Une chaîne fragile', 'Sans chef et rapide, mais peu protégée : facile à attaquer. C’est arrivé à Ethereum Classic en 2020.']
 };
 let sel = ['D', 'S'];
-const keyOf = () => ['D', 'S', 'C'].filter((k) => sel.includes(k)).join('').replace('DC', 'CD').replace('SC', 'CS');
-function placeCorners() {
-  const W = tri.clientWidth, H = tri.clientHeight;
-  const bw = Math.min(122, W / 2 - 8);
-  corners.forEach((c) => { c.style.width = bw + 'px'; });
-  const pos = { D: [W / 2, 34], S: [bw / 2 + 2, H - 34], C: [W - bw / 2 - 2, H - 34] };
-  corners.forEach((c) => { const p = pos[c.dataset.k]; c.style.left = p[0] + 'px'; c.style.top = p[1] + 'px'; });
-  return pos;
-}
+const keyOf = () => (sel.includes('D') && sel.includes('S')) ? 'DS' : (sel.includes('C') && sel.includes('S')) ? 'CS' : 'CD';
 function drawTri() {
   const W = tri.clientWidth, H = tri.clientHeight;
   if (!W || !H) return;
-  const pos = placeCorners();
-  const k = keyOf();
-  const pairs = [['D', 'S'], ['S', 'C'], ['C', 'D']];
-  const edges = pairs.map(([a, b]) => {
+  const bw = Math.min(118, W / 2 - 8);
+  corners.forEach((c) => { c.style.width = bw + 'px'; });
+  const pos = { D: [W / 2, 30], S: [bw / 2 + 2, H - 30], C: [W - bw / 2 - 2, H - 30] };
+  corners.forEach((c) => { const p = pos[c.dataset.k]; c.style.left = p[0] + 'px'; c.style.top = p[1] + 'px'; });
+  const edges = [['D', 'S'], ['S', 'C'], ['C', 'D']].map(([a, b]) => {
     const on = sel.includes(a) && sel.includes(b);
-    return `<line x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}" stroke="${on ? 'var(--or)' : 'var(--line)'}" stroke-width="${on ? 10 : 3}" stroke-linecap="round" ${on ? '' : 'stroke-dasharray="6 8"'}/>`;
+    return `<line x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}" stroke="${on ? 'var(--or)' : 'var(--line)'}" stroke-width="${on ? 10 : 3}" stroke-linecap="round"${on ? '' : ' stroke-dasharray="6 8"'}/>`;
   }).join('');
-  const cx = (pos.D[0] + pos.S[0] + pos.C[0]) / 3, cy = (pos.D[1] + pos.S[1] + pos.C[1]) / 3 + 10;
+  const cx = (pos.D[0] + pos.S[0] + pos.C[0]) / 3, cy = (pos.D[1] + pos.S[1] + pos.C[1]) / 3 + 12;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.innerHTML = edges + `<text x="${cx}" y="${cy}" text-anchor="middle" font-size="19" font-weight="700" font-family="Ubuntu, Inter, sans-serif" fill="var(--ink)">${COMBOS[k].short}</text>`;
+  svg.innerHTML = edges + `<text x="${cx}" y="${cy}" text-anchor="middle" font-size="20" font-weight="700" font-family="Ubuntu, Inter, sans-serif" fill="var(--ink)">${COMBOS[keyOf()][0]}</text>`;
 }
 function renderTri() {
-  const k = keyOf();
-  const lost = ['D', 'S', 'C'].find((x) => !sel.includes(x));
-  corners.forEach((c) => { const on = sel.includes(c.dataset.k); c.setAttribute('aria-pressed', String(on)); c.classList.toggle('lost', !on); });
-  res.innerHTML = `<h3>${COMBOS[k].title}</h3><p class="lost-l">Sacrifié : ${NAMES[lost].toLowerCase()}</p><p>${COMBOS[k].text}</p>`;
+  corners.forEach((c) => c.setAttribute('aria-pressed', String(sel.includes(c.dataset.k))));
+  const [name, text] = COMBOS[keyOf()];
+  res.innerHTML = `<b>${name}</b><p>${text}</p><p class="small hint">Touche un autre sommet pour comparer.</p>`;
   drawTri();
 }
 corners.forEach((c) => c.addEventListener('click', () => { const k = c.dataset.k; if (!sel.includes(k)) { sel = [sel[1], k]; renderTri(); } }));
 const triObs = new ResizeObserver(drawTri);
 triObs.observe(tri);
 renderTri();
-
-/* Taille des blocs */
-const range = document.getElementById('taille');
-const MULT = [1, 4, 16, 64, 256, 1500];
-const MACH = [
-  ['Un PC ordinaire ou un mini-PC', 'Presque tout le monde peut vérifier.'],
-  ['Un bon PC avec un gros disque', 'Beaucoup de monde peut encore vérifier.'],
-  ['Un PC costaud, plusieurs disques, une bonne fibre', 'Surtout des passionnés bien équipés.'],
-  ['Un serveur et des dizaines de To de disque', 'Surtout des professionnels.'],
-  ['Une baie de serveurs', 'Des entreprises. Les particuliers doivent leur faire confiance.'],
-  ['Un datacenter', 'Quelques géants vérifient pour tout le monde : on a recréé des chefs.']
-];
-const nf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 });
-const size = (mo) => mo >= 1e6 ? nf.format(mo / 1e6) + ' To' : mo >= 1000 ? nf.format(mo / 1000) + ' Go' : nf.format(mo < 10 ? mo : Math.round(mo)) + ' Mo';
-function renderSize() {
-  const i = +range.value, k = MULT[i];
-  range.style.setProperty('--pct', (i / (MULT.length - 1) * 100) + '%');
-  document.getElementById('tOut').textContent = '×' + nf.format(k) + ' · ' + size(1.5 * k) + ' par bloc';
-  document.getElementById('kTx').textContent = nf.format(Math.round(5.4 * k));
-  document.getElementById('kDay').textContent = size(1.5 * 144 * k);
-  document.getElementById('kYear').textContent = size(1.5 * 52560 * k);
-  document.getElementById('kMach').textContent = MACH[i][0];
-  document.getElementById('kWho').textContent = MACH[i][1];
-  const f = Math.log(k) / Math.log(1500);
-  document.getElementById('mFast').style.setProperty('--w', Math.round(8 + f * 92) + '%');
-  document.getElementById('mDec').style.setProperty('--w', Math.round(100 - f * 92) + '%');
-}
-range.addEventListener('input', renderSize);
-renderSize();
 }
 </script>
 </body>
