@@ -123,6 +123,18 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 .route i{flex:1 1 auto;min-width:10px;height:2px;background:currentColor;position:relative}
 .route i::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid currentColor;border-right:0}
 .route .mid{border-style:dashed}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:8px;counter-reset:st}
+.steps li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;font-size:17px;line-height:1.4;counter-increment:st}
+.steps li::before{content:counter(st);width:28px;height:28px;border-radius:50%;background:var(--or);color:#17140f;display:grid;place-items:center;font-family:Ubuntu,sans-serif;font-weight:700;font-size:15px}
+.mine{background:var(--panel);border-radius:14px;padding:14px;display:grid;gap:10px}
+.mchain{display:flex;align-items:center;overflow:hidden;min-height:38px}
+.mchain span{flex:none;border:2px solid var(--ink);border-radius:8px;padding:5px 9px;font-family:Ubuntu,sans-serif;font-weight:700;font-size:14px;background:var(--bg);white-space:nowrap}
+.mchain i{flex:none;width:14px;height:3px;background:var(--ink)}
+.mchain span.new{background:var(--or);border-color:var(--or);color:#17140f}
+.mout{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:15px;line-height:1.4;min-height:2.8em;overflow-wrap:anywhere;margin:0}
+.mout b{font-family:Inter,sans-serif}
+#mbtn{min-height:46px;border-radius:12px;border:0;background:var(--ink);color:var(--bg);font-weight:700;font-size:16px;cursor:pointer}
+#mbtn:disabled{opacity:.5;cursor:default}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{border:1.5px solid var(--ink);background:var(--bg);border-radius:999px;padding:8px 13px;font-weight:700;font-size:15px;cursor:pointer;min-height:42px}
 .chips button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
@@ -183,6 +195,13 @@ h2{font-size:29px}
 .chips{gap:5px}
 .chart{min-height:220px}
 .tl p{font-size:16px;line-height:1.38}
+.steps li{font-size:15px;line-height:1.35}
+.steps{gap:6px}
+.mine{padding:10px 12px;gap:6px}
+.wide{display:none}
+.mchain{min-height:32px}
+.mchain span{padding:3px 8px}
+.mout{font-size:14px}
 .tl div{padding-bottom:10px}
 #tri{min-height:190px}
 .res{padding:10px 12px}
@@ -281,6 +300,26 @@ h2{font-size:25px}
         <p><b>Un seul registre pour toute la monnaie</b>, copié par des milliers d'ordinateurs. Son propre protocole envoie de A à B, sans intermédiaire.</p>
         <div class="route" aria-label="De toi directement au destinataire"><span>Toi</span><i></i><span>Le destinataire</span></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="histoire">
+  <div class="in">
+    <div class="txt">
+      <h2>Le minage</h2>
+      <p class="big">Des machines transforment de l'électricité en bitcoins. Tout le monde peut miner.</p>
+      <ol class="steps">
+        <li><span><b>La course.</b> Les machines cherchent un nombre au hasard, comme le code d'un cadenas.</span></li>
+        <li><span><b>Le gagnant.</b> La première qui trouve gagne les nouveaux bitcoins (3,125 par bloc).</span></li>
+        <li><span><b>Bloc suivant.</b> Tous vérifient en une seconde que c'est bon, et on repart&nbsp;: un bloc toutes les 10 minutes environ.</span></li>
+      </ol>
+    </div>
+    <div class="mine">
+      <div class="mchain" id="mchain" aria-label="La chaîne de blocs"></div>
+      <p class="mout" id="mout" aria-live="polite">Lance une machine pour essayer.</p>
+      <button type="button" id="mbtn">Lancer la machine</button>
+      <p class="small">Démo&nbsp;: il faut un résultat qui commence par 000.<span class="wide"> Le vrai réseau fait des milliards de milliards d'essais par seconde.</span></p>
     </div>
   </div>
 </section>
@@ -458,6 +497,7 @@ h2{font-size:25px}
           <li><a href="https://bitcointalk.org/index.php?topic=1735.msg26999#msg26999">Le message de Satoshi sur WikiLeaks (5 déc. 2010)</a></li>
           <li><a href="https://satoshi.nakamotoinstitute.org/posts/bitcointalk/543/">Son dernier message sur le forum (12 déc. 2010)</a></li>
           <li><a href="https://www.coindesk.com/assange-bitcoin-wikileaks-helped-keep-alive">WikiLeaks accepte le bitcoin (2011)</a> et <a href="https://www.aljazeera.com/news/2024/6/25/julian-assange-timeline-a-criminal-or-a-hero">Julian Assange, chronologie</a></li>
+          <li><a href="https://www.coingecko.com/en/coins/bitcoin/bitcoin-halving">Récompense par bloc et halving</a></li>
           <li><a href="https://vitalik.eth.limo/general/2017/12/31/sharding_faq.html">Le trilemme, par Vitalik Buterin (2017)</a> et <a href="https://annualreport.visa.com/financials">Visa, rapport 2025</a></li>
           <li><a href="https://github.com/coinmetrics/data">Prix&nbsp;: Coin Metrics, données publiques</a> et <a href="https://www.theblock.co/news/markets/2026-11-25-bitcoin-falls-below-58000-coinshares-butterfill-sees-tail-end-bear-market-446678">presse de novembre 2026</a></li>
           <li><a href="https://blog.ethereum.org/2014/07/22/launching-the-ether-sale">La prévente d'Ethereum (2014)</a></li>
@@ -542,6 +582,39 @@ addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h &
 const start = firstOf(location.hash.slice(1) || 'intro');
 set(start);
 requestAnimationFrame(() => { deck.scrollLeft = start * deck.clientWidth; });
+
+/* Minage : une machine essaie des nombres au hasard jusqu'à trouver un résultat qui commence par 000 */
+const mchain = document.getElementById('mchain');
+const mout = document.getElementById('mout');
+const mbtn = document.getElementById('mbtn');
+const fr = new Intl.NumberFormat('fr-FR');
+const hash = (str) => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } h ^= h >>> 15; h = Math.imul(h, 2246822507); h ^= h >>> 13; return (h >>> 0).toString(16).padStart(8, '0'); };
+let height = 3, fresh = -1;
+function drawChain() {
+  const from = Math.max(1, height - 3);
+  let html = '';
+  for (let b = from; b <= height; b++) html += (b > from ? '<i></i>' : '') + `<span class="${b === fresh ? 'new' : ''}">Bloc ${b}</span>`;
+  mchain.innerHTML = html;
+}
+drawChain();
+mbtn.addEventListener('click', () => {
+  mbtn.disabled = true;
+  const next = height + 1;
+  let tries = 0, nonce = Math.floor(Math.random() * 1e9), found = '';
+  const step = () => {
+    const batch = reduce ? 1e6 : 70;
+    for (let k = 0; k < batch && !found; k++) { tries++; nonce++; const h = hash('bloc' + next + ':' + nonce); if (h.startsWith('000')) found = h; else if (k === batch - 1) mout.textContent = `Essai n° ${fr.format(tries)} : ${h}… raté`; }
+    if (!found) { requestAnimationFrame(step); return; }
+    mout.innerHTML = `Essai n° ${fr.format(tries)} : ${found} <b>trouvé !</b>`;
+    setTimeout(() => {
+      height = next; fresh = next; drawChain();
+      mout.innerHTML = `${found} vérifié par tous.<br><b>Bloc ${next} ajouté, +3,125 BTC.</b>`;
+      mbtn.textContent = 'Miner le bloc suivant';
+      mbtn.disabled = false;
+    }, reduce ? 0 : 500);
+  };
+  step();
+});
 
 /* Réseau : Satoshi n'est qu'un point parmi les autres */
 const net = document.getElementById('reseau');
